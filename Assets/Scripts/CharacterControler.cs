@@ -8,11 +8,6 @@ public class PlayerController : MonoBehaviour
     private bool _isMoving;
     private Vector2 _input;
 
-    private void Start()
-    {
-        
-    }
-
     private void Update()
     {
         if (!_isMoving)
@@ -46,7 +41,7 @@ public class PlayerController : MonoBehaviour
         transform.position = targetPos;
 
         // Add a small delay after movement to prevent rapid coroutine starts
-        yield return new WaitForSeconds(0.01f);
+        yield return new WaitForSeconds(0.001f);
 
         _isMoving = false;
     }
