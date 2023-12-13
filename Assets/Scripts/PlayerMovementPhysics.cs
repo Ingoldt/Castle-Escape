@@ -36,13 +36,13 @@ public class PlayerMovementPhysics : MonoBehaviour
 
         // Normalize the input vector
         _direction = _input.normalized;
-        Debug.Log("Input: " + _input + " Direction: " + _direction);
+        //Debug.Log("Input: " + _input + " Direction: " + _direction);
     }
 
     void Move()
     {
         //does't need Time.deltaTime because its called in Fixed update
         rb2D.velocity = _direction * moveSpeed;
-        Debug.Log(rb2D.velocity.magnitude);
+        //Debug.Log(rb2D.velocity.magnitude);
     }
 }
