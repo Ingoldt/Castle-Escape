@@ -17,7 +17,10 @@ public class LevelInfoScriptableObject : ScriptableObject
     private Variation _variation;
     public Variation PublicVariation => _variation;
     public Variation _Variation => _variation;
-    public TileBase[,] initialState;
+    public TileBase[,] InitialState;
+    public TileBase[,] PreviousState;
+    public TileBase[,] CurrentState;
+    public TileBase[,] FutureState;
 
 
 

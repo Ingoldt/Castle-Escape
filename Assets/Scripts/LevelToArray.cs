@@ -25,17 +25,17 @@ public class LevelToArray : MonoBehaviour
     public void ExtractAndSaveInitialState(Tilemap tilemap)
     {
         BoundsInt bounds = tilemap.cellBounds;
-        levelInfo.initialState = new TileBase[bounds.size.x, bounds.size.y];
+        levelInfo.InitialState = new TileBase[bounds.size.x, bounds.size.y];
 
         for (int x = 0; x < bounds.size.x; x++)
         {
             for (int y = 0; y < bounds.size.y; y++)
             {
-                levelInfo.initialState[x, y] = tilemap.GetTile(new Vector3Int(bounds.x + x, bounds.y + y, 0));
+                levelInfo.InitialState[x, y] = tilemap.GetTile(new Vector3Int(bounds.x + x, bounds.y + y, 0));
             }
         }
         Debug.Log("Base Type: " + levelInfo.PublicBaseType);
         Debug.Log("Variation: " + levelInfo.PublicVariation);
-        Debug.Log("Initial State Dimensions: " + levelInfo.initialState.GetLength(0) + " x " + levelInfo.initialState.GetLength(1));
+        Debug.Log("Initial State Dimensions: " + levelInfo.InitialState.GetLength(0) + " x " + levelInfo.InitialState.GetLength(1));
     }
 }

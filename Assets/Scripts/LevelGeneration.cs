@@ -7,8 +7,9 @@ using UnityEngine.Tilemaps;
 public class LevelGeneration : MonoBehaviour
 {
     [SerializeField]
-    private List<LevelInfoScriptableObject> prebuiltLevels;
-
+    private List<GameObject> levelPrefabs;
+    private GameObject levelInstance;
+    private LevelInfoScriptableObject selectedLevel;
     //Debugging
     /*
     void OnDrawGizmos()
@@ -24,53 +25,81 @@ public class LevelGeneration : MonoBehaviour
     }
     */
 
-    // Start is called before the first frame update
-    void Start()
+    // Add a property to get the current levelInstance
+    public GameObject GetLevelInstance
     {
-        if (prebuiltLevels != null && prebuiltLevels.Count > 0) 
+        get { return levelInstance; }
+    }
+
+    // Reset the environment and chooses a random initialization
+    public void ResetEnvironment()
+    {
+        // clean up left over instances 
+        if (levelInstance != null)
         {
-            LevelInfoScriptableObject selectedLevel = ChooseRandomLevel();
-            ApplyToTilemap(selectedLevel.initialState);
+            Destroy(levelInstance);
+        }
+
+        if (levelPrefabs != null && levelPrefabs.Count > 0) 
+        {
+            levelInstance = ChooseRandomLevel();
+            // Apply the initial state
+            InitializeTilemap(levelInstance);
         }
     }
 
-    private LevelInfoScriptableObject ChooseRandomLevel()
+    private GameObject ChooseRandomLevel()
     {
         // Randomly choose an prebuild Level from the list
-        int randomIndex = Mathf.FloorToInt(Random.Range(0, prebuiltLevels.Count));
+        int randomIndex = Mathf.FloorToInt(Random.Range(0, levelPrefabs.Count));
 
         // Return the selected prebuilt level
-        return prebuiltLevels[randomIndex];
+        return Instantiate(levelPrefabs[randomIndex], transform.localPosition,Quaternion.identity);
     }
 
-    void ApplyToTilemap(TileBase[,] initialState)
+    void InitializeTilemap(GameObject levelInstance)
     {
-        Tilemap tilemap = GetComponent<Tilemap>();
+        selectedLevel = levelInstance.GetComponent<LevelInfoScriptableObject>();
 
-        int width = initialState.GetLength(0);
-        int height = initialState.GetLength(1);
+        TileBase[,] initialState = selectedLevel.InitialState;
+        TileBase[,] currentState = selectedLevel.CurrentState;
+
+        // Ensure the dimensions match
+        int width = Mathf.Min(initialState.GetLength(0), currentState.GetLength(0));
+        int height = Mathf.Min(initialState.GetLength(1), currentState.GetLength(1));
 
         BoundsInt bounds = new BoundsInt(0, 0, 0, width, height, 0);
 
-        for(int x = 0; x < bounds.size.x;x++)
+        for (int x = 0; x < bounds.size.x; x++)
         {
-            for(int y = 0; y < bounds.size.y;y++)
+            for (int y = 0; y < bounds.size.y; y++)
             {
-                TileBase tile = initialState[x, y];
-                Vector3Int position = new Vector3Int(x, y, 0);
-                tilemap.SetTile(position, tile);
-
-                // Print out the tile information
-                if (tile != null)
-                {
-                    Debug.Log($"Set tile at ({position.x}, {position.y}): {tile.name}");
-                }
-                else
-                {
-                    Debug.Log($"No tile set at ({position.x}, {position.y})");
-                }
+                currentState[x, y] = initialState[x, y];
             }
         }
-        
+    }
+
+    void UpdateTilemap(GameObject levelInstance)
+    {
+        selectedLevel = levelInstance.GetComponent<LevelInfoScriptableObject>();
+
+        Tilemap tilemap = GetComponent<Tilemap>();
+        TileBase[,] currentState = selectedLevel.CurrentState;
+
+        // Ensure the dimensions match
+        int width = currentState.GetLength(0);
+        int height = currentState.GetLength(1);
+
+        BoundsInt bounds = new BoundsInt(0, 0, 0, width, height, 0);
+
+        for (int x = 0; x < bounds.size.x; x++)
+        {
+            for (int y = 0; y < bounds.size.y; y++)
+            {
+                TileBase tile = currentState[x, y];
+                Vector3Int position = new Vector3Int(x, y, 0);
+                tilemap.SetTile(position, tile);
+            }
+        }
     }
 }
