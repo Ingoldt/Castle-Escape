@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5eb64b5027b86b44b3df97a9cfbfb92, type: 3}
+  m_Name: TileTypes
+  m_EditorClassIdentifier: 
+  wallList:
+  - {fileID: 11400000, guid: 940edec8efa18814ea01c8242aba9caf, type: 2}
+  floorList:
+  - {fileID: 11400000, guid: 339868f1c11a3c94d96626341f76097a, type: 2}
+  - {fileID: 11400000, guid: ccdb70707c2c523458e2dc01d36ab4a9, type: 2}
+  - {fileID: 11400000, guid: 6c19e36b82145c445ac5db502ae7748f, type: 2}
+  - {fileID: 11400000, guid: cb846b81ad95dcc46a2e3ac24582be29, type: 2}
+  plantList:
+  - {fileID: 11400000, guid: 8677b1826ad14b3498a42432c7917ef0, type: 2}
+  - {fileID: 11400000, guid: 7e03c79ca5590c34092059e8d059e4e6, type: 2}
+  - {fileID: 11400000, guid: a079d03c0387fd942a46e677abd235df, type: 2}
+  pillarList:
+  - {fileID: 11400000, guid: e9d02946d7c023a4597b79ffbc4ba1e7, type: 2}
+  - {fileID: 11400000, guid: 5989d22e5937b5147a1e6f1007701b8f, type: 2}
+  - {fileID: 11400000, guid: 6e3e150a1596df645932ae8d3f64a66c, type: 2}
+  - {fileID: 11400000, guid: db5fadbccbceff9449ff4adc5a1ea6ef, type: 2}
+  barrelList:
+  - {fileID: 11400000, guid: cb2a23bcd80303349ba75f2958f908ae, type: 2}
+  - {fileID: 11400000, guid: 5f9d81c15df6120459fd05608f7c236f, type: 2}
+  - {fileID: 11400000, guid: 64735a8ab04b08d409c3944661567ad3, type: 2}
+  - {fileID: 11400000, guid: 9a0e8ab574578d6428290acca73ca51b, type: 2}
+  spawnList:
+  - {fileID: 11400000, guid: 0ad39624894c5de49be8337ddd3eec9d, type: 2}
+  doorList:
+  - {fileID: 11400000, guid: 9900a099f03962f4db86d045199982bd, type: 2}
+  - {fileID: 11400000, guid: a55d561126851cf45b1212710278d5f4, type: 2}
+  - {fileID: 11400000, guid: c48464088d1263940b98e426ee88de45, type: 2}
+  - {fileID: 11400000, guid: fbd63ecb87c8fcd488fdfba3676073f1, type: 2}
