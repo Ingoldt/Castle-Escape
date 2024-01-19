@@ -29,19 +29,6 @@ public class TileManager : MonoBehaviour
     {
         if (tile != null)
         {
-            // Check for essential tiles and assigning a specific id 
-
-            if (essentialTiles != null && ContainsTile(essentialTiles,tile))
-            {
-                // Check if the tile is already in the dictionary
-                if (!tileTypeToID.ContainsKey(tile))
-                {
-                    // Assign specific ID according to the array position
-                    int arrayIndex = Array.IndexOf(essentialTiles, tile);
-                    tileTypeToID[tile] = arrayIndex + 1; // Adding 1 to avoid 0 as ID
-                }
-                return tileTypeToID[tile];
-            }
             // Check if the tile is already in the dictionary
             if (!tileTypeToID.ContainsKey(tile))
             {

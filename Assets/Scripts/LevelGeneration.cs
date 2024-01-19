@@ -1,38 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class LevelGeneration : MonoBehaviour
 {
+    
+    public LevelGeneratorAgent agent;
     [SerializeField]
     private List<GameObject> levelPrefabs;
+    [SerializeField]
+    private GameObject parent;
+    [SerializeField]
+    private TileManager tileManager;
+
     private GameObject levelInstance;
-    private LevelInfoScriptableObject selectedLevel;
-    //Debugging
-    /*
-    void OnDrawGizmos()
-    {
-        Tilemap tilemap = GetComponent<Tilemap>();
+    private LevelInfoScriptableObject levelInfo;
 
-        if (tilemap != null)
-        {
-            // Draw the tilemap bounds using Gizmos
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(tilemap.localBounds.center, tilemap.localBounds.size);
-        }
-    }
-    */
+    private TileBase[,] previousState;
+    private TileBase[,] currentState;
 
-    // Add a property to get the current levelInstance
-    public GameObject GetLevelInstance
-    {
-        get { return levelInstance; }
-    }
+    public LevelInfoScriptableObject GetLevelInfo
+    { get { return levelInfo;  } }
+    public TileBase[,] GetPreviousState
+    { get { return previousState; } }
+    public TileBase[,] GetCurrentState
+    { get { return currentState; } }
 
     // Reset the environment and chooses a random initialization
-    public void ResetEnvironment()
+    public void ResetLevel()
     {
         // clean up left over instances 
         if (levelInstance != null)
@@ -43,8 +41,12 @@ public class LevelGeneration : MonoBehaviour
         if (levelPrefabs != null && levelPrefabs.Count > 0) 
         {
             levelInstance = ChooseRandomLevel();
+            //set parent structure
+            levelInstance.transform.SetParent(parent.transform);
             // Apply the initial state
-            InitializeTilemap(levelInstance);
+            InitializeTilemap();
+            Debug.Log("Initialized both states");
+            agent.UpdateBehaviorParameters();
         }
     }
 
@@ -52,39 +54,53 @@ public class LevelGeneration : MonoBehaviour
     {
         // Randomly choose an prebuild Level from the list
         int randomIndex = Mathf.FloorToInt(Random.Range(0, levelPrefabs.Count));
+        
+        // Instantiate the selected prebuilt level
+        levelInstance = Instantiate(levelPrefabs[randomIndex], transform.localPosition, Quaternion.identity);
 
-        // Return the selected prebuilt level
-        return Instantiate(levelPrefabs[randomIndex], transform.localPosition,Quaternion.identity);
+        // Get LevelInfoScriptableObject from the prefab directly
+        levelInfo = levelInstance.GetComponent<Level>().levelInfo;
+
+        return levelInstance;
     }
 
-    void InitializeTilemap(GameObject levelInstance)
+    void InitializeTilemap()
     {
-        selectedLevel = levelInstance.GetComponent<LevelInfoScriptableObject>();
+        TileBase[,] initialState = levelInfo.InitialState;
 
-        TileBase[,] initialState = selectedLevel.InitialState;
-        TileBase[,] currentState = selectedLevel.CurrentState;
+        int width = levelInfo.width;
+        int height = levelInfo.height;
 
-        // Ensure the dimensions match
-        int width = Mathf.Min(initialState.GetLength(0), currentState.GetLength(0));
-        int height = Mathf.Min(initialState.GetLength(1), currentState.GetLength(1));
+        // Create a new array with the same dimensions as initialState
+        currentState = new TileBase[width, height];
+        previousState = new TileBase[width,height];
 
-        BoundsInt bounds = new BoundsInt(0, 0, 0, width, height, 0);
-
-        for (int x = 0; x < bounds.size.x; x++)
+        // Copy elements from initialState to currentState
+        for (int x = 0; x < width; x++)
         {
-            for (int y = 0; y < bounds.size.y; y++)
+            for (int y = 0; y < height; y++)
             {
                 currentState[x, y] = initialState[x, y];
+                previousState[x,y] = initialState[x, y];
             }
         }
+        /*
+        string directory = @"D:\Downloads";
+        string filePath = Path.Combine(directory, "yourFileName.csv");
+        SaveCurrentStateToCSV(filePath);
+        */
     }
 
-    void UpdateTilemap(GameObject levelInstance)
+    // update the tilemap by replacing a tile in the current state and update the previous state
+    public void ReplaceTile(int x, int y, int newTileValue)
     {
-        selectedLevel = levelInstance.GetComponent<LevelInfoScriptableObject>();
+        previousState[x, y] = currentState[x, y];
+        currentState[x, y] = tileManager.GetTileFromID(newTileValue);
+    }
 
-        Tilemap tilemap = GetComponent<Tilemap>();
-        TileBase[,] currentState = selectedLevel.CurrentState;
+    public void UpdateTilemap()
+    {
+        Tilemap tilemap = levelInstance.GetComponentInChildren<Tilemap>();
 
         // Ensure the dimensions match
         int width = currentState.GetLength(0);
@@ -102,4 +118,55 @@ public class LevelGeneration : MonoBehaviour
             }
         }
     }
+
+    //Just for debugging
+    void SaveCurrentStateToCSV(string filePath)
+    {
+        if (currentState == null)
+        {
+            Debug.LogError("Current state is not initialized.");
+            return;
+        }
+
+        int width = currentState.GetLength(0);
+        int height = currentState.GetLength(1);
+
+        // Create or overwrite the CSV file
+        using (StreamWriter writer = new StreamWriter(filePath))
+        {
+            for (int y = height - 1; y >= 0; y--)
+            {
+                string rowString = "";
+
+                for (int x = 0; x < width; x++)
+                {
+                    TileBase tile = currentState[x, y];
+
+                    if (tile != null)
+                    {
+                        // Assuming you are using Unity's default Tile component
+                        if (tile is Tile unityTile)
+                        {
+                            // Assuming that your tiles have a sprite assigned
+                            rowString += unityTile.sprite.name + ",";
+                        }
+                        else
+                        {
+                            rowString += "UnknownTileType,";
+                        }
+                    }
+                    else
+                    {
+                        rowString += "Empty,";
+                    }
+                }
+
+                // Remove the trailing comma and write the row to the file
+                writer.WriteLine(rowString.TrimEnd(','));
+            }
+        }
+
+        Debug.Log("Current state saved to: " + filePath);
+    }
+
 }
