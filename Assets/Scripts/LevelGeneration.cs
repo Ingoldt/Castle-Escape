@@ -7,7 +7,6 @@ using UnityEngine.Tilemaps;
 
 public class LevelGeneration : MonoBehaviour
 {
-    
     public LevelGeneratorAgent agent;
     [SerializeField]
     private List<GameObject> levelPrefabs;
@@ -29,6 +28,29 @@ public class LevelGeneration : MonoBehaviour
     public TileBase[,] GetCurrentState
     { get { return currentState; } }
 
+    //Debugging
+    /*
+    private void OnDrawGizmos()
+    {
+        Tilemap tilemap = levelInstance.GetComponentInChildren<Tilemap>();
+
+        if (tilemap != null)
+        {
+            DrawTilemapOriginGizmo(tilemap);
+        }
+    }
+
+    private void DrawTilemapOriginGizmo(Tilemap tilemap)
+    {
+        Vector3Int originCell = tilemap.origin;
+        Vector3 originWorldPosition = tilemap.GetCellCenterWorld(originCell);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(originWorldPosition, new Vector3(tilemap.cellSize.x, tilemap.cellSize.y, 0));
+    }
+    */
+
+
     // Reset the environment and chooses a random initialization
     public void ResetLevel()
     {
@@ -38,15 +60,13 @@ public class LevelGeneration : MonoBehaviour
             Destroy(levelInstance);
         }
 
-        if (levelPrefabs != null && levelPrefabs.Count > 0) 
+        if (levelPrefabs != null && levelPrefabs.Count > 0)
         {
             levelInstance = ChooseRandomLevel();
             //set parent structure
             levelInstance.transform.SetParent(parent.transform);
             // Apply the initial state
             InitializeTilemap();
-            Debug.Log("Initialized both states");
-            agent.UpdateBehaviorParameters();
         }
     }
 
@@ -54,9 +74,11 @@ public class LevelGeneration : MonoBehaviour
     {
         // Randomly choose an prebuild Level from the list
         int randomIndex = Mathf.FloorToInt(Random.Range(0, levelPrefabs.Count));
-        
+
         // Instantiate the selected prebuilt level
-        levelInstance = Instantiate(levelPrefabs[randomIndex], transform.localPosition, Quaternion.identity);
+        levelInstance = Instantiate(levelPrefabs[randomIndex], parent.transform.position, Quaternion.identity);
+        Debug.Log("level Instance created at: " + parent.transform.position);
+        
 
         // Get LevelInfoScriptableObject from the prefab directly
         levelInfo = levelInstance.GetComponent<Level>().levelInfo;
@@ -64,8 +86,9 @@ public class LevelGeneration : MonoBehaviour
         return levelInstance;
     }
 
-    void InitializeTilemap()
+    private void InitializeTilemap()
     {
+        
         TileBase[,] initialState = levelInfo.InitialState;
 
         int width = levelInfo.width;
@@ -84,6 +107,7 @@ public class LevelGeneration : MonoBehaviour
                 previousState[x,y] = initialState[x, y];
             }
         }
+
         /*
         string directory = @"D:\Downloads";
         string filePath = Path.Combine(directory, "yourFileName.csv");
@@ -98,24 +122,31 @@ public class LevelGeneration : MonoBehaviour
         currentState[x, y] = tileManager.GetTileFromID(newTileValue);
     }
 
-    public void UpdateTilemap()
+    public void UpdateTilemap(int x, int y)
     {
         Tilemap tilemap = levelInstance.GetComponentInChildren<Tilemap>();
 
-        // Ensure the dimensions match
-        int width = currentState.GetLength(0);
-        int height = currentState.GetLength(1);
+        // Get the bottom-left corner of the tilemap in world coordinates
+        Vector3Int parentCellPosition = tilemap.origin;
+        Debug.Log("tilemap origin: " + tilemap.origin);
 
-        BoundsInt bounds = new BoundsInt(0, 0, 0, width, height, 0);
+        // Calculate the cell position using the bottom-left corner and the given x, y
+        Vector3Int cellPosition = new Vector3Int(parentCellPosition.x + x, parentCellPosition.y + y, 0);
 
-        for (int x = 0; x < bounds.size.x; x++)
+        // Set the tile in the tilemap
+        tilemap.SetTile(cellPosition, currentState[x, y]);
+
+        // Update the collider
+        UpdateCollider2D();
+    }
+
+    public void UpdateCollider2D()
+    {
+        TilemapCollider2D tilemapCollider = levelInstance.GetComponentInChildren<TilemapCollider2D>();
+        if (tilemapCollider != null)
         {
-            for (int y = 0; y < bounds.size.y; y++)
-            {
-                TileBase tile = currentState[x, y];
-                Vector3Int position = new Vector3Int(x, y, 0);
-                tilemap.SetTile(position, tile);
-            }
+            tilemapCollider.enabled = false;
+            tilemapCollider.enabled = true;
         }
     }
 
@@ -168,5 +199,4 @@ public class LevelGeneration : MonoBehaviour
 
         Debug.Log("Current state saved to: " + filePath);
     }
-
 }

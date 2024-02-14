@@ -48,6 +48,7 @@ public class Level : MonoBehaviour
 
         levelInfo.width = bounds.size.x;
         levelInfo.height = bounds.size.y;
+        Debug.Log("Save Inital State of: " + $"({levelInfo.PublicBaseType} , {levelInfo.PublicVariation})");
         Debug.Log("Base Type: " + levelInfo.PublicBaseType);
         Debug.Log("Variation: " + levelInfo.PublicVariation);
         Debug.Log("Initial State Dimensions: " + levelInfo.width + " x " + levelInfo.height);

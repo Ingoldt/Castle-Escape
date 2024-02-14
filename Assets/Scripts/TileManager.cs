@@ -8,22 +8,21 @@ public class TileManager : MonoBehaviour
 {
     public TileTypesScriptableObject tileTypes;
     [SerializeField]
-    private TileBase[] essentialTiles;
     private Dictionary<TileBase, int> tileTypeToID = new Dictionary<TileBase, int>();
-    private int nextTileID = 6;
+    private int nextTileID = 1;
 
     private List<Vector2Int> wallLocations = new List<Vector2Int>();
-    public List<Vector2Int> WallLocations { get; private set; }
+    public List<Vector2Int> WallLocations { get { return wallLocations; }}
     private List<Vector2Int> floorLocations = new List<Vector2Int>();
-    public List<Vector2Int> FloorLocations { get; private set; }
-    private List<Vector2Int> indestructableLocation = new List<Vector2Int>();
-    public List<Vector2Int> IndestructableLocation { get; private set; }
-    private List<Vector2Int> destructableLocation = new List<Vector2Int>();
-    public List<Vector2Int> DestructableLocation { get; private set; }
-    private List<Vector2Int> doorLocation = new List<Vector2Int>();
-    public List<Vector2Int> DoorLocation { get; private set; }
-    private List<Vector2Int> spawnLocation = new List<Vector2Int>();
-    public List<Vector2Int> SpawnLocation { get; private set; }
+    public List<Vector2Int> FloorLocations { get { return floorLocations; }}
+    private List<Vector2Int> indestructableLocations = new List<Vector2Int>();
+    public List<Vector2Int> IndestructableLocations { get { return indestructableLocations; }}
+    private List<Vector2Int> destructableLocations = new List<Vector2Int>();
+    public List<Vector2Int> DestructableLocations { get { return destructableLocations; }}
+    private List<Vector2Int> doorLocations = new List<Vector2Int>();
+    public List<Vector2Int> DoorLocations { get { return doorLocations; }}
+    private List<Vector2Int> spawnLocations = new List<Vector2Int>();
+    public List<Vector2Int> SpawnLocations { get { return spawnLocations; }}
 
     public int GetTileValue(TileBase tile)
     {
@@ -47,7 +46,7 @@ public class TileManager : MonoBehaviour
         {
             if (kvp.Value == tileID)
             {
-                return kvp.Key;
+                return kvp.Key;               
             }
         }
         // Return null if the ID is not found or there is no tile at this location
@@ -65,87 +64,83 @@ public class TileManager : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 TileBase tile = tilemap[x, y];
-                if (isWallTile(tile))
+                if (IsWallTile(tile))
                 {
                     wallLocations.Add(new Vector2Int(x, y));
                 }
-                if (isFloorTile(tile))
+                else if (IsFloorTile(tile))
                 {
                     floorLocations.Add(new Vector2Int(x, y));
                 }
-                if (isIndestructableTile(tile))
+                else if (IsIndestructibleTile(tile))
                 {
-                    indestructableLocation.Add(new Vector2Int(x, y));
+                    indestructableLocations.Add(new Vector2Int(x, y));
                 }
-                if (isDestructableTile(tile))
+                else if (IsDestructibleTile(tile))
                 {
-                    destructableLocation.Add(new Vector2Int(x, y));
+                    destructableLocations.Add(new Vector2Int(x, y));
                 }
-                if (isDoorTile(tile))
+                else if (IsDoorTile(tile))
                 {
-                    doorLocation.Add(new Vector2Int(x, y));
+                    doorLocations.Add(new Vector2Int(x, y));
                 }
-                if (isSpawnTile(tile))
+                else if (IsSpawnTile(tile))
                 {
-                    spawnLocation.Add(new Vector2Int(x, y));
+                    spawnLocations.Add(new Vector2Int(x, y));
                 }
             }
         }
     }
 
-    public bool isWallTile(TileBase tile) 
+    // Reset the state, including the tileTypeToID dictionary
+    public void ResetState()
     {
-        if(tileTypes.WallList.Contains(tile))
-        {
-            return true;
-        }
-        return false;
+        tileTypeToID.Clear();
+        nextTileID = 1;
+
+        wallLocations.Clear();
+        floorLocations.Clear();
+        indestructableLocations.Clear();
+        destructableLocations.Clear();
+        doorLocations.Clear();
+        spawnLocations.Clear();
     }
 
-    public bool isFloorTile(TileBase tile)
+    public bool IsWallTile(TileBase tile)
     {
-        if (tileTypes.FloorList.Contains(tile))
-        {
-            return true;
-        }
-        return false;
+        return tileTypes.WallList.Contains(tile);
     }
 
-    public bool isIndestructableTile(TileBase tile)
+    public bool IsFloorTile(TileBase tile)
     {
-        if (tileTypes.IndestructibleList.Contains(tile))
-        {
-            return true;
-        }
-        return false;
+        return tileTypes.FloorList.Contains(tile);
     }
 
-    public bool isDestructableTile(TileBase tile)
+    public bool IsIndestructibleTile(TileBase tile)
     {
-        if (tileTypes.BarrelList.Contains(tile))
-        {
-            return true;
-        }
-        return false;
+        return tileTypes.IndestructibleList.Contains(tile);
     }
 
-    public bool isDoorTile(TileBase tile)
+    public bool IsDestructibleTile(TileBase tile)
     {
-        if (tileTypes.DoorList.Contains(tile))
-        {
-            return true;
-        }
-        return false;
+        return tileTypes.BarrelList.Contains(tile);
     }
 
-    public bool isSpawnTile(TileBase tile)
+    public bool IsDoorTile(TileBase tile)
     {
-        if (tileTypes.SpawnList.Contains(tile))
-        {
-            return true;
-        }
-        return false;
+        return tileTypes.DoorList.Contains(tile);
     }
+
+    public bool IsSpawnTile(TileBase tile)
+    {
+        return tileTypes.SpawnList.Contains(tile);
+    }
+
+    public bool IsTileInList(TileBase tile, List<TileBase> tileList)
+    {
+        return tileList.Contains(tile);
+    }
+
 
 
     // Checking if a certain tile type is within the array

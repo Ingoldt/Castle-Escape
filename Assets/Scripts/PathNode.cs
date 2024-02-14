@@ -26,8 +26,18 @@ public class PathNode
         "Pillar_3",
         "Pillar_4",
         "Plant_1",
-        "Plant_2",
-        "Plant_3",
+        "Plant_1_1",
+        "Plant_1_2",
+        "Plant_1_3",
+        "Plant_1_4",
+        "Plant_2_1",
+        "Plant_2_2",
+        "Plant_2_3",
+        "Plant_2_4",
+        "Plant_3_1",
+        "Plant_3_2",
+        "Plant_3_3",
+        "Plant_3_4",
     };
 
     public PathNode(int x, int y, TileBase tile)
@@ -35,10 +45,10 @@ public class PathNode
         this.x = x;
         this.y = y;
         this.tile = tile;
-        isWalkable = !nonWalkableTiles.Contains(tile.name);
+        isWalkable = tile != null && !nonWalkableTiles.Contains(tile.name);
     }
 
-    public void calculateFCost() 
+    public void CalculateFCost() 
     {
         fCost = gCost + hCost;
     

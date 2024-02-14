@@ -1,26 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class Pathfinding : MonoBehaviour
+public class Pathfinding
 {
 
     private const int STRAIGHT_COST = 10;
     private List<PathNode> openList;
     private List<PathNode> closedList;
+    private PathNode[,] nodeGrid;
 
-    public bool containsPath(Vector2Int start, Vector2Int end, int width, int height, TileBase[,] currentState)
+    public Pathfinding() { }
+    public bool ContainsPath(Vector2Int start, Vector2Int end, int width, int height, TileBase[,] currentState)
     {
-        TileBase startTile = currentState[start.x, start.y];
-        TileBase endTile = currentState[end.x, end.y];
-
-        PathNode startNode = new PathNode(start.x, start.y, startTile);
-        PathNode endNode = new PathNode(end.x, end.y, endTile);
-
-        openList = new List<PathNode> { startNode };
-        closedList = new List<PathNode>();
+        nodeGrid = new PathNode[width, height];
 
         for (int x = 0; x < width; x++)
         {
@@ -29,18 +25,36 @@ public class Pathfinding : MonoBehaviour
                 TileBase tile = currentState[x, y];
                 PathNode pathNode = new PathNode(x, y, tile);
                 pathNode.gCost = int.MaxValue;
-                pathNode.calculateFCost();
+                pathNode.CalculateFCost();
                 pathNode.previousNode = null;
+
+                nodeGrid[x, y] = pathNode;
             }
         }
 
+        PathNode startNode = nodeGrid[start.x, start.y];
+        PathNode endNode = nodeGrid[end.x, end.y];
+
         startNode.gCost = 0;
         startNode.hCost = CaculateDistanceCost(startNode, endNode);
-        startNode.calculateFCost();
+        startNode.CalculateFCost();
+
+        // Debug statements after processing
+        Debug.Log("Start Node: " + $"({startNode.x}, {startNode.y})");
+        Debug.Log("End Node: " + $"({endNode.x}, {endNode.y})");
+
+        openList = new List<PathNode> { startNode };
+        closedList = new List<PathNode>();
 
         while (openList.Count > 0) 
         {
             PathNode currentNode = GetLowestFCostNode(openList);
+
+            // Debug statements before processing
+            Debug.Log("Open List: " + string.Join(", ", openList.Select(node => $"({node.x}, {node.y})")));
+            Debug.Log("Closed List: " + string.Join(", ", closedList.Select(node => $"({node.x}, {node.y})")));
+            Debug.Log("current Node: " + $"({currentNode.x}, {currentNode.y})");
+
             if (currentNode == endNode) 
             {
                 // FInal node reached
@@ -50,7 +64,10 @@ public class Pathfinding : MonoBehaviour
             openList.Remove(currentNode);
             closedList.Add(currentNode);
 
-            foreach (PathNode neighbourNode in GetNeighbourList(currentNode, currentState, width, height)) 
+            // Debug statements after processing
+            Debug.Log("FCosts in Open List: " + string.Join(", ", openList.Select(node => $"{node.fCost}")));
+
+            foreach (PathNode neighbourNode in GetNeighbourList(currentNode, width, height)) 
             {
                 if (closedList.Contains(neighbourNode)) continue;
                 if (!neighbourNode.isWalkable)
@@ -65,7 +82,7 @@ public class Pathfinding : MonoBehaviour
                     neighbourNode.previousNode = currentNode;
                     neighbourNode.gCost = tentativeGCost;
                     neighbourNode.hCost = CaculateDistanceCost(neighbourNode, endNode);
-                    neighbourNode.calculateFCost();
+                    neighbourNode.CalculateFCost();
 
                     if (!openList.Contains(neighbourNode)) 
                     {
@@ -80,36 +97,37 @@ public class Pathfinding : MonoBehaviour
         return false;
     }
 
-    private List<PathNode> GetNeighbourList(PathNode currentNode, TileBase[,] currentState, int width, int height)
+    private List<PathNode> GetNeighbourList(PathNode currentNode,int width, int height)
     {
         List<PathNode > neighbourList = new List<PathNode>();
         if (currentNode.x - 1 >= 0)
         {
             // Left
-            neighbourList.Add(GetNode(currentNode.x - 1, currentNode.y, currentState));
+            neighbourList.Add(GetNode(currentNode.x - 1, currentNode.y));
         }
         if (currentNode.x + 1 < width)
         {
             // Right
-            neighbourList.Add(GetNode(currentNode.x + 1, currentNode.y, currentState));
+            neighbourList.Add(GetNode(currentNode.x + 1, currentNode.y));
         }
         if (currentNode.y - 1 >= 0)
         {
             // Down
-            neighbourList.Add(GetNode(currentNode.x, currentNode.y - 1, currentState));
+            neighbourList.Add(GetNode(currentNode.x, currentNode.y - 1));
         }
         if (currentNode.y + 1 < height)
         {
             // Up
-            neighbourList.Add(GetNode(currentNode.x, currentNode.y + 1, currentState));
+            neighbourList.Add(GetNode(currentNode.x, currentNode.y + 1));
         }
+
         return neighbourList;
     }
 
-    private PathNode GetNode(int x, int y, TileBase[,] currentState)
+    private PathNode GetNode(int x, int y)
     {
-        TileBase tile = currentState[x, y];
-        return new PathNode(x, y, tile);
+        
+        return nodeGrid[x, y];
     }
 
     private int CaculateDistanceCost(PathNode a, PathNode b)

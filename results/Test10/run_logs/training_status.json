@@ -1,0 +1,29 @@
+{
+    "Generate Level": {
+        "checkpoints": [
+            {
+                "steps": 359463,
+                "file_path": "results\\Test10\\Generate Level\\Generate Level-359463.onnx",
+                "reward": 76.01666577657063,
+                "creation_time": 1707406872.9051542,
+                "auxillary_file_paths": [
+                    "results\\Test10\\Generate Level\\Generate Level-359463.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 359463,
+            "file_path": "results\\Test10\\Generate Level.onnx",
+            "reward": 76.01666577657063,
+            "creation_time": 1707406872.9051542,
+            "auxillary_file_paths": [
+                "results\\Test10\\Generate Level\\Generate Level-359463.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.13.1+cu117"
+    }
+}

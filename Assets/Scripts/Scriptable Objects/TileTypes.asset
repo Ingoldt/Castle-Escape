@@ -20,8 +20,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6c19e36b82145c445ac5db502ae7748f, type: 2}
   - {fileID: 11400000, guid: cb846b81ad95dcc46a2e3ac24582be29, type: 2}
   plantList:
-  - {fileID: 11400000, guid: 8677b1826ad14b3498a42432c7917ef0, type: 2}
-  - {fileID: 11400000, guid: 7e03c79ca5590c34092059e8d059e4e6, type: 2}
+  - {fileID: 11400000, guid: c2fe5c222fc2fde478370aa447663c01, type: 2}
+  - {fileID: 11400000, guid: 6c18e331090177d40b6258aca46d37db, type: 2}
+  - {fileID: 11400000, guid: 7b86970d0ea4fff44abec7dbd181050c, type: 2}
+  - {fileID: 11400000, guid: f38c603244391e64690fde84482adca2, type: 2}
+  - {fileID: 11400000, guid: c77a05ec765671d42bf5c7efc84007ec, type: 2}
+  - {fileID: 11400000, guid: f6c59447a5ca76f42ba734935ca95b88, type: 2}
+  - {fileID: 11400000, guid: 85c079103efee5a4699d2feeb31422ae, type: 2}
+  - {fileID: 11400000, guid: ed91d7b51c84d644b882cfda49b9ae0e, type: 2}
   - {fileID: 11400000, guid: a079d03c0387fd942a46e677abd235df, type: 2}
   pillarList:
   - {fileID: 11400000, guid: e9d02946d7c023a4597b79ffbc4ba1e7, type: 2}
