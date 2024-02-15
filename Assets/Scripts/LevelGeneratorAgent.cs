@@ -40,7 +40,7 @@ public class LevelGeneratorAgent : Agent
     private const float PlayableReward = 15f;
     private const float ConstraintReward = 5f;
     private const float WallConstraintPenalty = -1f;
-    private const float DoorAmmountPenalty = -1f;
+    private const float DoorAmountPenalty = -1f;
 
 
     /*
@@ -201,13 +201,13 @@ public class LevelGeneratorAgent : Agent
             {
                 // tile is null
                 reward += NullTileReward;
-                reward += TileContraints(x, y, newTileValue);
+                reward += TileConstraints(x, y, newTileValue);
             }
             else
             {
                 // tile is not null
                 reward += TilePlacementReward;
-                reward += TileContraints(x, y, newTileValue);
+                reward += TileConstraints(x, y, newTileValue);
             }
             //exploring distance
             if (distance < 2)
@@ -280,10 +280,11 @@ public class LevelGeneratorAgent : Agent
         return false;
     }
 
-    private float TileContraints(int x, int y, int newTileValue)
+    private float TileConstraints(int x, int y, int newTileValue)
     {
         float reward = 0f;
-        int doorAmmount = tileManager.DoorLocations.Count;
+        int doorAmount = tileManager.DoorLocations.Count;
+        string tileName = tileManager.GetTileFromID(newTileValue).name;
 
         // Calculate Manhattan distances to each side of the grid
         int distanceTop = y;
@@ -305,66 +306,48 @@ public class LevelGeneratorAgent : Agent
             return reward;
         }
 
-        // door tile top
-        if (tileManager.GetTileFromID(newTileValue).name == "Door_Closed_1")
+        // door tile top, right, bottom, left
+        else if (tileName.StartsWith("Door_Closed_"))
         {
-            // should have 5 wall tiles surrounding the top half
-            int[] xOffset = { -1, 0, 1, -1, 1, };
-            int[] yOffset = { -1, -1, -1, 0, 0, };
-            int counter = CheckNeighborsForTile(x, y, xOffset, yOffset, tileManager.tileTypes.WallList);
-            reward = ConstraintReward + (counter * WallConstraintPenalty) + (doorAmmount * DoorAmmountPenalty);
-            if (minDistance == distanceTop)
-            {
-                reward += 1f;
-            }
-            return reward;
-        }
+            int doorIndex = int.Parse(tileName.Substring("Door_Closed_".Length)) - 1;
 
-        // door tile right
-        if (tileManager.GetTileFromID(newTileValue).name == "Door_Closed_2")
-        {
-            // should have 5 wall tiles surrounding the right half
-            int[] xOffset = { 0, 1, 1, 0, 1 };
-            int[] yOffset = { -1, -1, 0, 1, 1 };
-            int counter = CheckNeighborsForTile(x, y, xOffset, yOffset, tileManager.tileTypes.WallList);
-            reward = ConstraintReward + (counter * WallConstraintPenalty) + (doorAmmount * DoorAmmountPenalty);
-            if (minDistance == distanceRight)
-            {
-                reward += 1f;
-            }
-            return reward;
-        }
+            // Adjust offsets based on door orientation
+            int[] xOffset;
+            int[] yOffset;
 
-        // door tile bottom
-        if (tileManager.GetTileFromID(newTileValue).name == "Door_Closed_3")
-        {
-            // should have 5 wall tiles surrounding the bottom half
-            int[] xOffset = { -1, 1, -1, 0, 1 };
-            int[] yOffset = { 0, 0, 1, 1, 1 };
-            int counter = CheckNeighborsForTile(x, y, xOffset, yOffset, tileManager.tileTypes.WallList);
-            reward = ConstraintReward + (counter * WallConstraintPenalty) + (doorAmmount * DoorAmmountPenalty);
-            if (minDistance == distanceBottom)
+            if (doorIndex % 4 == 0) // Door_Closed_1 (top)
             {
-                reward += 1f;
+                xOffset = new int[] { -1, 0, 1, -1, 1, };
+                yOffset = new int[] { -1, -1, -1, 0, 0, };
             }
-            return reward;
-        }
-
-        // door tile left
-        if (tileManager.GetTileFromID(newTileValue).name == "Door_Closed_4")
-        {
-            // should have 5 wall tiles surrounding the left half
-            int[] xOffset = { -1, 0, -1, -1, 0 };
-            int[] yOffset = { -1, -1, 0, 1, 1 };
-            int counter = CheckNeighborsForTile(x, y, xOffset, yOffset, tileManager.tileTypes.WallList);
-            reward = ConstraintReward + (counter * WallConstraintPenalty) + (doorAmmount * DoorAmmountPenalty);
-            if (minDistance == distanceLeft)
+            else if (doorIndex % 4 == 1) // Door_Closed_2 (right)
             {
-                reward += 1f;
+                xOffset = new int[] { 0, 1, 1, 0, 1 };
+                yOffset = new int[] { -1, -1, 0, 1, 1 };
             }
-            return reward;
-        }
+            else if (doorIndex % 4 == 2) // Door_Closed_3 (bottom)
+            {
+                xOffset = new int[] { -1, 1, -1, 0, 1 };
+                yOffset = new int[] { 0, 0, 1, 1, 1 };
+            }
+            else // Door_Closed_4 (left)
+            {
+                xOffset = new int[] { -1, 0, -1, -1, 0 };
+                yOffset = new int[] { -1, -1, 0, 1, 1 };
+            }
 
+            int counter = CheckNeighborsForTile(x, y, xOffset, yOffset, tileManager.tileTypes.WallList);
+            reward = ConstraintReward + (counter * WallConstraintPenalty) + (doorAmount * DoorAmountPenalty);
+
+            // Check if the door is placed on the side with the minimum distance
+            if (minDistance == (doorIndex % 4 == 0 ? distanceTop : doorIndex % 4 == 1 ? distanceRight :
+                               doorIndex % 4 == 2 ? distanceBottom : distanceLeft))
+            {
+                // reward for placing the correct door variation based of the rotation
+                // make const variable 
+                reward += 1;
+            }
+        }
         return reward;
     }
     private int CheckNeighborsForTile(int x, int y, int[] xOffset, int[] yOffset, List<TileBase> tileList)
@@ -397,11 +380,11 @@ public class LevelGeneratorAgent : Agent
         return reward;
     }
 
-    // add remaining steps as opservation
+    // add remaining steps as opservation (checked)
 
     // direct
     // every empty tile needs to be surrounded by wall tiles  (checked)
-    // Door rotation matching überprüfen    
+    // Door rotation matching überprüfen    (checked)
     // doors must be surrounded by 3 wall tiles (checked)
 
     // im äußeren ring mit gewisser thickness dürfen nur walls und oder türen plaziert werden
