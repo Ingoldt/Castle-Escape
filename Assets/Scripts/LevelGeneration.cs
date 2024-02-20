@@ -77,9 +77,7 @@ public class LevelGeneration : MonoBehaviour
 
         // Instantiate the selected prebuilt level
         levelInstance = Instantiate(levelPrefabs[randomIndex], parent.transform.position, Quaternion.identity);
-        Debug.Log("level Instance created at: " + parent.transform.position);
         
-
         // Get LevelInfoScriptableObject from the prefab directly
         levelInfo = levelInstance.GetComponent<Level>().levelInfo;
 
@@ -107,7 +105,6 @@ public class LevelGeneration : MonoBehaviour
                 previousState[x,y] = initialState[x, y];
             }
         }
-
         /*
         string directory = @"D:\Downloads";
         string filePath = Path.Combine(directory, "yourFileName.csv");
@@ -128,7 +125,6 @@ public class LevelGeneration : MonoBehaviour
 
         // Get the bottom-left corner of the tilemap in world coordinates
         Vector3Int parentCellPosition = tilemap.origin;
-        Debug.Log("tilemap origin: " + tilemap.origin);
 
         // Calculate the cell position using the bottom-left corner and the given x, y
         Vector3Int cellPosition = new Vector3Int(parentCellPosition.x + x, parentCellPosition.y + y, 0);

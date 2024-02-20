@@ -9,7 +9,7 @@ public class TileManager : MonoBehaviour
     public TileTypesScriptableObject tileTypes;
     [SerializeField]
     private Dictionary<TileBase, int> tileTypeToID = new Dictionary<TileBase, int>();
-    private int nextTileID = 1;
+    private int nextTileID;
 
     private List<Vector2Int> wallLocations = new List<Vector2Int>();
     public List<Vector2Int> WallLocations { get { return wallLocations; }}
@@ -24,9 +24,29 @@ public class TileManager : MonoBehaviour
     private List<Vector2Int> spawnLocations = new List<Vector2Int>();
     public List<Vector2Int> SpawnLocations { get { return spawnLocations; }}
 
+    public void InitializeReservedTiles()
+    {
+        // Assign Door tiles to reserved spots (0, 1, 2, 3)
+        AssignReservedTile(tileTypes.DoorList[0], 0);
+        AssignReservedTile(tileTypes.DoorList[1], 1);
+        AssignReservedTile(tileTypes.DoorList[2], 2);
+        AssignReservedTile(tileTypes.DoorList[3], 3);
+        AssignReservedTile(tileTypes.WallList[0], 4);
+    }
+    private void AssignReservedTile(TileBase tile, int reservedID)
+    {
+        tileTypeToID[tile] = reservedID;
+    }
+
     public int GetTileValue(TileBase tile)
     {
-        if (tile != null)
+        if (tile == null)
+        {
+            // Log the error and throw an exception
+            Debug.LogError("Tile cannot be null");
+            throw new ArgumentNullException(nameof(tile), "Tile cannot be null");
+        }
+        else
         {
             // Check if the tile is already in the dictionary
             if (!tileTypeToID.ContainsKey(tile))
@@ -35,8 +55,6 @@ public class TileManager : MonoBehaviour
             }
             return tileTypeToID[tile];
         }
-
-        return 0; // Default to 0 if the tile is not recognized or empty
     }
 
     public TileBase GetTileFromID(int tileID)
@@ -49,8 +67,9 @@ public class TileManager : MonoBehaviour
                 return kvp.Key;               
             }
         }
-        // Return null if the ID is not found or there is no tile at this location
-        return null;
+
+        // Throw an InvalidOperationException if the ID is not found
+        throw new InvalidOperationException($"Tile with ID {tileID} not found.");
 
     }
 
@@ -96,7 +115,8 @@ public class TileManager : MonoBehaviour
     public void ResetState()
     {
         tileTypeToID.Clear();
-        nextTileID = 1;
+        nextTileID = 4;
+        InitializeReservedTiles();
 
         wallLocations.Clear();
         floorLocations.Clear();
@@ -108,52 +128,36 @@ public class TileManager : MonoBehaviour
 
     public bool IsWallTile(TileBase tile)
     {
-        return tileTypes.WallList.Contains(tile);
+        return IsTileInList(tile, tileTypes.WallList);
     }
 
     public bool IsFloorTile(TileBase tile)
     {
-        return tileTypes.FloorList.Contains(tile);
+        return IsTileInList(tile, tileTypes.FloorList);
     }
 
     public bool IsIndestructibleTile(TileBase tile)
     {
-        return tileTypes.IndestructibleList.Contains(tile);
+        return IsTileInList(tile, tileTypes.IndestructibleList);
     }
 
     public bool IsDestructibleTile(TileBase tile)
     {
-        return tileTypes.BarrelList.Contains(tile);
+        return IsTileInList(tile, tileTypes.BarrelList);
     }
 
     public bool IsDoorTile(TileBase tile)
     {
-        return tileTypes.DoorList.Contains(tile);
+        return IsTileInList(tile, tileTypes.DoorList);
     }
 
     public bool IsSpawnTile(TileBase tile)
     {
-        return tileTypes.SpawnList.Contains(tile);
+        return IsTileInList(tile, tileTypes.SpawnList);
     }
 
     public bool IsTileInList(TileBase tile, List<TileBase> tileList)
     {
         return tileList.Contains(tile);
-    }
-
-
-
-    // Checking if a certain tile type is within the array
-    private bool ContainsTile(TileBase[] targetTiles, TileBase tile)
-    {
-        foreach (var t in targetTiles) 
-        { 
-            if(t == tile)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
