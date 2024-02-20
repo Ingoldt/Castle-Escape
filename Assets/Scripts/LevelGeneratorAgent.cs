@@ -37,9 +37,9 @@ public class LevelGeneratorAgent : Agent
     private const float MediumDistanceReward = 0.1f;
     private const float FarDistanceReward = 0.5f;
     private const float NotPlayablePenalty = -5f;
-    private const float PlayableReward = 15f;
+    private const float PlayableReward = 50f;
     private const float ConstraintReward = 5f;
-    private const float WallConstraintPenalty = -0.8f;
+    private const float WallConstraintPenalty = -1,25f;
     private const float DoorAmountPenalty = -1f;
     private const float DoorRotationReward = 0.5f;
     private const float TileMatchingReward = 10f;
@@ -120,7 +120,7 @@ public class LevelGeneratorAgent : Agent
                 // update visuals
                 levelGeneration.UpdateTilemap(x, y);
 
-                //´locate all tile types
+                //ï¿½locate all tile types
                 tileManager.LocateCategorizeTiles(currentState);
 
                 // direct reward calculation
@@ -305,8 +305,8 @@ public class LevelGeneratorAgent : Agent
             TileBase tile = tileManager.GetTileFromID(newTileValue);
             Debug.Log("Retrieved Tile: " + (tile != null ? tile.name : "null"));
 
-            xOffset = new int[] { -1, 0, 1, -1, 1, 1, 0, -1};
-            yOffset = new int[] { -1, -1, -1, 0, 0, 1, 1, 1};
+            xOffset = new int[] { 0, -1, 1, 0 };
+            yOffset = new int[] { -1, 0, 0, 1 };
 
             int counter = CheckNeighborsForTile(x, y, xOffset, yOffset, tileManager.tileTypes.WallList);
             if (counter <= 6)
@@ -373,7 +373,7 @@ public class LevelGeneratorAgent : Agent
         }
         else
         {
-            return reward += NotPlayablePenalty * ((doorCount - 1) + (spawnCount - 1));
+            return reward += NotPlayablePenalty * (Mathf.Abs(doorCount - 1) + Mathf.Abs(spawnCount - 1));
         }
     }
 
