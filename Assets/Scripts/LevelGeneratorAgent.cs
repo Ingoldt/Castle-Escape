@@ -39,7 +39,7 @@ public class LevelGeneratorAgent : Agent
     private const float NotPlayablePenalty = -5f;
     private const float PlayableReward = 50f;
     private const float ConstraintReward = 5f;
-    private const float WallConstraintPenalty = -1,25f;
+    private const float WallConstraintPenalty = -1.25f;
     private const float DoorAmountPenalty = -1f;
     private const float DoorRotationReward = 0.5f;
     private const float TileMatchingReward = 10f;
