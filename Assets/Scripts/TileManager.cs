@@ -27,11 +27,14 @@ public class TileManager : MonoBehaviour
     public void InitializeReservedTiles()
     {
         // Assign Door tiles to reserved spots (0, 1, 2, 3)
+        // Assign Wall tiles to (4)
+        // Assign Spawn tiles to (5)
         AssignReservedTile(tileTypes.DoorList[0], 0);
         AssignReservedTile(tileTypes.DoorList[1], 1);
         AssignReservedTile(tileTypes.DoorList[2], 2);
         AssignReservedTile(tileTypes.DoorList[3], 3);
         AssignReservedTile(tileTypes.WallList[0], 4);
+        AssignReservedTile(tileTypes.SpawnList[0], 5);
     }
     private void AssignReservedTile(TileBase tile, int reservedID)
     {
@@ -115,7 +118,7 @@ public class TileManager : MonoBehaviour
     public void ResetState()
     {
         tileTypeToID.Clear();
-        nextTileID = 4;
+        nextTileID = 5;
         InitializeReservedTiles();
 
         wallLocations.Clear();

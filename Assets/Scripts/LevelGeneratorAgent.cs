@@ -30,7 +30,6 @@ public class LevelGeneratorAgent : Agent
     private int width;
 
     private float totalDirectReward;
-    private float totalIndirectReward;
 
     private const float TilePlacementReward = 1f;
     private const float CloseDistancePenalty = -0.5f;
@@ -39,10 +38,11 @@ public class LevelGeneratorAgent : Agent
     private const float NotPlayablePenalty = -5f;
     private const float PlayableReward = 50f;
     private const float ConstraintReward = 5f;
-    private const float WallConstraintPenalty = -1.25f;
+    private const float WallConstraintPenalty = -1.1f;
     private const float DoorAmountPenalty = -1f;
     private const float DoorRotationReward = 0.5f;
     private const float TileMatchingReward = 10f;
+    private const float SpawnTilePenalty = -5f;
 
 
     /*
@@ -64,7 +64,6 @@ public class LevelGeneratorAgent : Agent
     {
         
         totalDirectReward = 0f;
-        totalIndirectReward = 0f;
         // reset the list of the Tilemanager
         tileManager.ResetState();
         // select a random level for a new episode
@@ -120,7 +119,7 @@ public class LevelGeneratorAgent : Agent
                 // update visuals
                 levelGeneration.UpdateTilemap(x, y);
 
-                //�locate all tile types
+                // locate all tile types
                 tileManager.LocateCategorizeTiles(currentState);
 
                 // direct reward calculation
@@ -128,6 +127,8 @@ public class LevelGeneratorAgent : Agent
                 AddReward(directReward);
                 totalDirectReward += directReward;
 
+                Debug.Log("direct reward for action: " + directReward);
+                Debug.Log("total direct Rewards this episode: " + totalDirectReward);
                 // Save current action's coordinates as previous action
                 // needed for poximity check
                 prevX = x;
@@ -138,8 +139,8 @@ public class LevelGeneratorAgent : Agent
                 {
                     float indirectReward = CalculateIndirectReward(); // Implement CalculateIndirectReward as needed
                     AddReward(indirectReward); // Add indirect reward during the episode
-                    totalIndirectReward += indirectReward;
 
+                    Debug.Log("inirect Rewards this episode: " + indirectReward);
                     EndEpisode();
                 }
             }
@@ -184,7 +185,7 @@ public class LevelGeneratorAgent : Agent
         if (levelGeneration.GetPreviousState[x, y] != tileManager.GetTileFromID(newTileValue))
         {
             // reward for replacing a tile with a new Tile
-            reward += TilePlacementReward;
+            reward += TilePlacementReward; 
 
             if (newTileValue <= 3)
             {
@@ -237,16 +238,8 @@ public class LevelGeneratorAgent : Agent
         */
 
         int doorAmount = tileManager.DoorLocations.Count;
+        int SpawnAmount = tileManager.SpawnLocations.Count;
         string tileName = tileManager.GetTileFromID(newTileValue)?.name;
-
-        if (newTileValue == 4) 
-        {
-            Debug.Log("Tile ID: " + newTileValue);
-            Debug.Log("coordinates " + " x " + x + " y " + y);
-            TileBase tile = tileManager.GetTileFromID(newTileValue);
-            Debug.Log("Retrieved Tile: " + (tile != null ? tile.name : "null"));
-
-        }
 
         // Calculate Manhattan distances to each side of the grid
         int distanceTop = y;
@@ -260,8 +253,23 @@ public class LevelGeneratorAgent : Agent
         int[] xOffset;
         int[] yOffset;
 
+        // want to set spawn tile while spawn tiles are at max amount
+        if(newTileValue == 5)
+        {
+            if (SpawnAmount >= 1)
+            {
+                return reward = SpawnTilePenalty;
+            }
+        }
+        
+        // direct not playable penalty
+        else if (doorAmount > 1 || SpawnAmount > 1)
+        {
+            reward += doorAmount * DoorAmountPenalty + SpawnAmount * SpawnTilePenalty;
+        }
+        
         // door tile top, right, bottom, left
-        if (newTileValue <= 3)
+        else if (newTileValue <= 3)
         {
             if (newTileValue == 0) // Door_Closed_1 (top)
             {
@@ -296,27 +304,14 @@ public class LevelGeneratorAgent : Agent
             }
             return reward;
         }
-
-        else if (tileName == "Wall")
+        
+        else if (newTileValue == 4)
         {
-
-            Debug.Log("Tile ID: " + newTileValue);
-            Debug.Log("coordinates " + " x " + x + " y " + y);
-            TileBase tile = tileManager.GetTileFromID(newTileValue);
-            Debug.Log("Retrieved Tile: " + (tile != null ? tile.name : "null"));
-
             xOffset = new int[] { 0, -1, 1, 0 };
             yOffset = new int[] { -1, 0, 0, 1 };
 
             int counter = CheckNeighborsForTile(x, y, xOffset, yOffset, tileManager.tileTypes.WallList);
-            if (counter <= 6)
-            {
-                return reward += ConstraintReward;
-            }
-            else
-            {
-                reward = ConstraintReward + (counter * WallConstraintPenalty);
-            }
+            reward = ConstraintReward + (counter * WallConstraintPenalty);
         }
         return reward;
     }
@@ -373,7 +368,7 @@ public class LevelGeneratorAgent : Agent
         }
         else
         {
-            return reward += NotPlayablePenalty * (Mathf.Abs(doorCount - 1) + Mathf.Abs(spawnCount - 1));
+            return reward += NotPlayablePenalty * 5;
         }
     }
 
