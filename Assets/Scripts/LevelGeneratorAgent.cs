@@ -67,10 +67,10 @@ public class LevelGeneratorAgent : Agent
         // reset the list of the Tilemanager
         tileManager.ResetState();
         // reset level for inference phase
-        levelGeneration.ResetLevel();
+        //levelGeneration.ResetLevel();
 
         // select a random level for new trainbing episode
-        //levelGeneration.ResetLevelTraining();
+        levelGeneration.ResetLevelTraining();
         // 20% of the tiles in the level can be altered by the agend rounding it up to the nearest integer
         base.MaxStep = (int)(levelGeneration.GetLevelInfo.tileCount * 0.15f + 0.5f);
     }
@@ -122,6 +122,7 @@ public class LevelGeneratorAgent : Agent
                 // update visuals
                 levelGeneration.UpdateTilemap(x, y);
                 // locate all tile types
+                tileManager.ResetLists();
                 tileManager.LocateCategorizeTiles(currentState);
 
                 // direct reward calculation
@@ -362,6 +363,7 @@ public class LevelGeneratorAgent : Agent
         List<Vector2Int> spawnLocations = tileManager.SpawnLocations;
         int doorCount = doorLocations.Count;
         int spawnCount = spawnLocations.Count;
+        Debug.Log("Door Amount: " + doorCount + ", Spawn AMount: " + spawnCount);
 
         // Reward calculation for correct ammount of reachable doors from spawn
         if (doorCount == 1 && spawnCount == 1)
@@ -369,7 +371,7 @@ public class LevelGeneratorAgent : Agent
             if(IsReachable(doorLocations, spawnLocations))
             {
                 levelGeneration.GetLevelInfo.playability = true;
-                Debug.Log("Level is playable Agent atchived it's goal");
+                Debug.Log("Level is playable Agent achieve it's goal");
                 return reward += PlayableReward;
             }
             return reward;

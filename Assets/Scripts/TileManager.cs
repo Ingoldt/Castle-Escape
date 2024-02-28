@@ -120,7 +120,10 @@ public class TileManager : MonoBehaviour
         tileTypeToID.Clear();
         nextTileID = 5;
         InitializeReservedTiles();
-
+        ResetLists();
+    }
+    public void ResetLists()
+    {
         wallLocations.Clear();
         floorLocations.Clear();
         indestructableLocations.Clear();
