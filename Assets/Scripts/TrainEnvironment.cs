@@ -25,7 +25,7 @@ public class TrainEnvironment : MonoBehaviour
     public void ResetEnvironment()
     {
         // Reset the level component
-        //level.ResetLevel();
+        //level.ResetLevelTraining();
 
         // Reset the ML Agent
         //mlAgent.ResetAgent();

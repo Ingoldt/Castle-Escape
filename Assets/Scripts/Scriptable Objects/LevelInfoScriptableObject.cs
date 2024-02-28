@@ -11,7 +11,7 @@ public class LevelInfoScriptableObject : ScriptableObject
     public enum Variation { V1, V2, V3, V4 }
     public Variation PublicVariation => _variation;
     public BaseType PublicBaseType => _baseType;
-    public Variation _Variation => _variation;
+
     public TileBase[,] InitialState;
     [HideInInspector]
     public int width;
@@ -19,6 +19,8 @@ public class LevelInfoScriptableObject : ScriptableObject
     public int height;
     [HideInInspector]
     public int tileCount;
+    [HideInInspector]
+    public bool playability = false;
 
     [SerializeField]
     private BaseType _baseType;

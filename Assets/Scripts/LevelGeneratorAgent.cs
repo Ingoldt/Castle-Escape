@@ -45,6 +45,7 @@ public class LevelGeneratorAgent : Agent
     private const float SpawnTilePenalty = -5f;
 
 
+
     /*
     public void UpdateBehaviorParameters()
     {
@@ -61,13 +62,15 @@ public class LevelGeneratorAgent : Agent
 
 
     public override void OnEpisodeBegin()
-    {
-        
+    {      
         totalDirectReward = 0f;
         // reset the list of the Tilemanager
         tileManager.ResetState();
-        // select a random level for a new episode
+        // reset level for inference phase
         levelGeneration.ResetLevel();
+
+        // select a random level for new trainbing episode
+        //levelGeneration.ResetLevelTraining();
         // 20% of the tiles in the level can be altered by the agend rounding it up to the nearest integer
         base.MaxStep = (int)(levelGeneration.GetLevelInfo.tileCount * 0.15f + 0.5f);
     }
@@ -85,7 +88,7 @@ public class LevelGeneratorAgent : Agent
             Debug.LogError("TileManager is not assigned.");
             return;
         }
-
+        
         previousState = levelGeneration.GetPreviousState;
         currentState = levelGeneration.GetCurrentState;
 
@@ -118,7 +121,6 @@ public class LevelGeneratorAgent : Agent
                 levelGeneration.ReplaceTile(x, y, newTileValue);
                 // update visuals
                 levelGeneration.UpdateTilemap(x, y);
-
                 // locate all tile types
                 tileManager.LocateCategorizeTiles(currentState);
 
@@ -127,8 +129,9 @@ public class LevelGeneratorAgent : Agent
                 AddReward(directReward);
                 totalDirectReward += directReward;
 
-                Debug.Log("direct reward for action: " + directReward);
-                Debug.Log("total direct Rewards this episode: " + totalDirectReward);
+                //Debug.Log("direct reward for action: " + directReward);
+                //Debug.Log("total direct Rewards this episode: " + totalDirectReward);
+
                 // Save current action's coordinates as previous action
                 // needed for poximity check
                 prevX = x;
@@ -140,7 +143,7 @@ public class LevelGeneratorAgent : Agent
                     float indirectReward = CalculateIndirectReward(); // Implement CalculateIndirectReward as needed
                     AddReward(indirectReward); // Add indirect reward during the episode
 
-                    Debug.Log("inirect Rewards this episode: " + indirectReward);
+                    //Debug.Log("inirect Rewards this episode: " + indirectReward);
                     EndEpisode();
                 }
             }
@@ -363,11 +366,17 @@ public class LevelGeneratorAgent : Agent
         // Reward calculation for correct ammount of reachable doors from spawn
         if (doorCount == 1 && spawnCount == 1)
         {
-            IsReachable(doorLocations, spawnLocations);
-            return reward += PlayableReward;
+            if(IsReachable(doorLocations, spawnLocations))
+            {
+                levelGeneration.GetLevelInfo.playability = true;
+                Debug.Log("Level is playable Agent atchived it's goal");
+                return reward += PlayableReward;
+            }
+            return reward;
         }
         else
         {
+            levelGeneration.GetLevelInfo.playability = false;
             return reward += NotPlayablePenalty * 5;
         }
     }
