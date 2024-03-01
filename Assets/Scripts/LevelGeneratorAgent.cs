@@ -21,7 +21,8 @@ public class LevelGeneratorAgent : Agent
     private LevelGeneration levelGeneration;
     [SerializeField]
     private TileManager tileManager;
-
+    
+    BufferSensorComponent bufferSensor;
     TileBase[,] previousState;
     TileBase[,] currentState;
     private int prevX;
@@ -55,7 +56,7 @@ public class LevelGeneratorAgent : Agent
         {
             Debug.Log($"Vector Observation Size: {behaviorParameters.BrainParameters.VectorObservationSize}");
 
-            // Set Branch size for each discreate branch
+            // Set Branch size for each discrete branch
             // int numberOfBranches = behaviorParameters.
         }
     }
@@ -92,6 +93,7 @@ public class LevelGeneratorAgent : Agent
         
         previousState = levelGeneration.GetPreviousState;
         currentState = levelGeneration.GetCurrentState;
+        bufferSensor = GetComponent<BufferSensorComponent>();
 
         // Flatten the 2d array into a 1D array and add it to the observation
         FlattenObservations(sensor, previousState);
@@ -157,7 +159,9 @@ public class LevelGeneratorAgent : Agent
     {
         width = levelGeneration.GetLevelInfo.width;
         height = levelGeneration.GetLevelInfo.height;
-
+        //Debug.Log("Level: "+ levelGeneration.GetLevelInfo.name + "height: " + height + "Width: " + width + "Variation: " + levelGeneration.GetLevelInfo.PublicVariation);
+        
+        
         if (width != 0 && height != 0)
         {
             for (int x = 0; x < width; x++)
@@ -206,7 +210,6 @@ public class LevelGeneratorAgent : Agent
             else if (tileManager.IsDestructibleTile(tileManager.GetTileFromID(newTileValue)))
             {
                 // barrel
-                Debug.Log("Barrel was placed for a Reward of: " + DistrucableReward);
                 return reward += DistrucableReward;
             }
             else
@@ -370,7 +373,7 @@ public class LevelGeneratorAgent : Agent
         List<Vector2Int> spawnLocations = tileManager.SpawnLocations;
         int doorCount = doorLocations.Count;
         int spawnCount = spawnLocations.Count;
-        Debug.Log("Door Amount: " + doorCount + ", Spawn AMount: " + spawnCount);
+        //Debug.Log("Door Amount: " + doorCount + ", Spawn AMount: " + spawnCount);
 
         // Reward calculation for correct ammount of reachable doors from spawn
         if (doorCount == 1 && spawnCount == 1)

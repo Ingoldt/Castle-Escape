@@ -62,6 +62,7 @@ public class TileManager : MonoBehaviour
 
     public TileBase GetTileFromID(int tileID)
     {
+
         // Find Tile associated with the given ID
         foreach (var kvp in tileTypeToID)
         {
@@ -70,9 +71,15 @@ public class TileManager : MonoBehaviour
                 return kvp.Key;               
             }
         }
+        /*
+        foreach (var kvp in tileTypeToID)
+        {
+            Debug.Log("You have " + kvp.Value + " " + kvp.Key);
 
+        }
+        */
         // Throw an InvalidOperationException if the ID is not found
-        throw new InvalidOperationException($"Tile with ID {tileID} not found.");
+        throw new InvalidOperationException($"Tile with ID {tileID} not found in level instance:");
 
     }
 
@@ -118,7 +125,7 @@ public class TileManager : MonoBehaviour
     public void ResetState()
     {
         tileTypeToID.Clear();
-        nextTileID = 5;
+        nextTileID = 6;
         InitializeReservedTiles();
         ResetLists();
     }
