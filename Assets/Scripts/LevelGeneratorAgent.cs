@@ -22,7 +22,6 @@ public class LevelGeneratorAgent : Agent
     [SerializeField]
     private TileManager tileManager;
     
-    BufferSensorComponent bufferSensor;
     TileBase[,] previousState;
     TileBase[,] currentState;
     private int prevX;
@@ -93,7 +92,6 @@ public class LevelGeneratorAgent : Agent
         
         previousState = levelGeneration.GetPreviousState;
         currentState = levelGeneration.GetCurrentState;
-        bufferSensor = GetComponent<BufferSensorComponent>();
 
         // Flatten the 2d array into a 1D array and add it to the observation
         FlattenObservations(sensor, previousState);
@@ -389,6 +387,7 @@ public class LevelGeneratorAgent : Agent
         else
         {
             levelGeneration.GetLevelInfo.playability = false;
+            Debug.Log("Level is not playable");
             return reward += NotPlayablePenalty * 5;
         }
     }
