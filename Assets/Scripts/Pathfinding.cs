@@ -40,8 +40,8 @@ public class Pathfinding
         startNode.CalculateFCost();
 
         // Debug statements after processing
-        Debug.Log("Start Node: " + $"({startNode.x}, {startNode.y})");
-        Debug.Log("End Node: " + $"({endNode.x}, {endNode.y})");
+        //Debug.Log("Start Node: " + $"({startNode.x}, {startNode.y})");
+        //Debug.Log("End Node: " + $"({endNode.x}, {endNode.y})");
 
         openList = new List<PathNode> { startNode };
         closedList = new List<PathNode>();
@@ -51,9 +51,9 @@ public class Pathfinding
             PathNode currentNode = GetLowestFCostNode(openList);
 
             // Debug statements before processing
-            Debug.Log("Open List: " + string.Join(", ", openList.Select(node => $"({node.x}, {node.y})")));
-            Debug.Log("Closed List: " + string.Join(", ", closedList.Select(node => $"({node.x}, {node.y})")));
-            Debug.Log("current Node: " + $"({currentNode.x}, {currentNode.y})");
+            //Debug.Log("Open List: " + string.Join(", ", openList.Select(node => $"({node.x}, {node.y})")));
+            //Debug.Log("Closed List: " + string.Join(", ", closedList.Select(node => $"({node.x}, {node.y})")));
+            //Debug.Log("current Node: " + $"({currentNode.x}, {currentNode.y})");
 
             if (currentNode == endNode) 
             {
@@ -65,7 +65,7 @@ public class Pathfinding
             closedList.Add(currentNode);
 
             // Debug statements after processing
-            Debug.Log("FCosts in Open List: " + string.Join(", ", openList.Select(node => $"{node.fCost}")));
+            //Debug.Log("FCosts in Open List: " + string.Join(", ", openList.Select(node => $"{node.fCost}")));
 
             foreach (PathNode neighbourNode in GetNeighbourList(currentNode, width, height)) 
             {

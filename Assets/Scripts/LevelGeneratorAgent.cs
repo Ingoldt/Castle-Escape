@@ -36,9 +36,10 @@ public class LevelGeneratorAgent : Agent
     private const float MediumDistanceReward = 0.1f;
     private const float FarDistanceReward = 0.5f;
     private const float NotPlayablePenalty = -5f;
+    private const float DistrucableReward = 1.2f;
     private const float PlayableReward = 50f;
     private const float ConstraintReward = 5f;
-    private const float WallConstraintPenalty = -1.1f;
+    private const float WallConstraintPenalty = -1.4f;
     private const float DoorAmountPenalty = -1f;
     private const float DoorRotationReward = 0.5f;
     private const float TileMatchingReward = 10f;
@@ -201,6 +202,12 @@ public class LevelGeneratorAgent : Agent
                 // wall tiles
                 // more close together placement of wall tiles
                 return reward += TileConstraints(x, y, newTileValue);
+            }
+            else if (tileManager.IsDestructibleTile(tileManager.GetTileFromID(newTileValue)))
+            {
+                // barrel
+                Debug.Log("Barrel was placed for a Reward of: " + DistrucableReward);
+                return reward += DistrucableReward;
             }
             else
             {
