@@ -1,0 +1,29 @@
+{
+    "Large  Level": {
+        "checkpoints": [
+            {
+                "steps": 1584,
+                "file_path": "results\\TestLarge1\\Large  Level\\Large  Level-1584.onnx",
+                "reward": -1471.7326628032483,
+                "creation_time": 1709656300.7866209,
+                "auxillary_file_paths": [
+                    "results\\TestLarge1\\Large  Level\\Large  Level-1584.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1584,
+            "file_path": "results\\TestLarge1\\Large  Level.onnx",
+            "reward": -1471.7326628032483,
+            "creation_time": 1709656300.7866209,
+            "auxillary_file_paths": [
+                "results\\TestLarge1\\Large  Level\\Large  Level-1584.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.13.1+cu117"
+    }
+}

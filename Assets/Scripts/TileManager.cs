@@ -24,6 +24,11 @@ public class TileManager : MonoBehaviour
     private List<Vector2Int> spawnLocations = new List<Vector2Int>();
     public List<Vector2Int> SpawnLocations { get { return spawnLocations; }}
 
+    public int GetTileTypeDictionaryCount()
+    {
+        return tileTypeToID.Count;
+    }
+
     public void InitializeReservedTiles()
     {
         // Assign Door tiles to reserved spots (0, 1, 2, 3)
@@ -33,8 +38,8 @@ public class TileManager : MonoBehaviour
         AssignReservedTile(tileTypes.DoorList[1], 1);
         AssignReservedTile(tileTypes.DoorList[2], 2);
         AssignReservedTile(tileTypes.DoorList[3], 3);
-        AssignReservedTile(tileTypes.WallList[0], 4);
-        AssignReservedTile(tileTypes.SpawnList[0], 5);
+        AssignReservedTile(tileTypes.SpawnList[0], 4);
+        AssignReservedTile(tileTypes.WallList[0], 5);
     }
     private void AssignReservedTile(TileBase tile, int reservedID)
     {
@@ -71,13 +76,6 @@ public class TileManager : MonoBehaviour
                 return kvp.Key;               
             }
         }
-        /*
-        foreach (var kvp in tileTypeToID)
-        {
-            Debug.Log("You have " + kvp.Value + " " + kvp.Key);
-
-        }
-        */
         // Throw an InvalidOperationException if the ID is not found
         throw new InvalidOperationException($"Tile with ID {tileID} not found in level instance:");
 
@@ -171,6 +169,7 @@ public class TileManager : MonoBehaviour
 
     public bool IsTileInList(TileBase tile, List<TileBase> tileList)
     {
-        return tileList.Contains(tile);
+        bool status = tileList.Contains(tile);
+        return status;
     }
 }

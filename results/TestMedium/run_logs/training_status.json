@@ -1,0 +1,150 @@
+{
+    "Medium Level": {
+        "checkpoints": [
+            {
+                "steps": 499949,
+                "file_path": "results\\TestMedium\\Medium Level\\Medium Level-499949.onnx",
+                "reward": -96.7604312318744,
+                "creation_time": 1709562605.8898463,
+                "auxillary_file_paths": [
+                    "results\\TestMedium\\Medium Level\\Medium Level-499949.pt"
+                ]
+            },
+            {
+                "steps": 999951,
+                "file_path": "results\\TestMedium\\Medium Level\\Medium Level-999951.onnx",
+                "reward": -94.01773663421176,
+                "creation_time": 1709563434.5909033,
+                "auxillary_file_paths": [
+                    "results\\TestMedium\\Medium Level\\Medium Level-999951.pt"
+                ]
+            },
+            {
+                "steps": 1499953,
+                "file_path": "results\\TestMedium\\Medium Level\\Medium Level-1499953.onnx",
+                "reward": -68.16616050795753,
+                "creation_time": 1709564289.1944475,
+                "auxillary_file_paths": [
+                    "results\\TestMedium\\Medium Level\\Medium Level-1499953.pt"
+                ]
+            },
+            {
+                "steps": 1796912,
+                "file_path": "results\\TestMedium\\Medium Level\\Medium Level-1796912.onnx",
+                "reward": -70.75751572388869,
+                "creation_time": 1709564807.4037738,
+                "auxillary_file_paths": [
+                    "results\\TestMedium\\Medium Level\\Medium Level-1796912.pt"
+                ]
+            },
+            {
+                "steps": 1999955,
+                "file_path": "results\\TestMedium\\Medium Level\\Medium Level-1999955.onnx",
+                "reward": -72.20304919827369,
+                "creation_time": 1709565450.7218513,
+                "auxillary_file_paths": [
+                    "results\\TestMedium\\Medium Level\\Medium Level-1999955.pt"
+                ]
+            },
+            {
+                "steps": 2324792,
+                "file_path": "results\\TestMedium\\Medium Level\\Medium Level-2324792.onnx",
+                "reward": -114.474001455307,
+                "creation_time": 1709566043.9755337,
+                "auxillary_file_paths": [
+                    "results\\TestMedium\\Medium Level\\Medium Level-2324792.pt"
+                ]
+            },
+            {
+                "steps": 2499949,
+                "file_path": "results\\TestMedium\\Medium Level\\Medium Level-2499949.onnx",
+                "reward": -107.3792992728097,
+                "creation_time": 1709568309.6298811,
+                "auxillary_file_paths": [
+                    "results\\TestMedium\\Medium Level\\Medium Level-2499949.pt"
+                ]
+            },
+            {
+                "steps": 2950184,
+                "file_path": "results\\TestMedium\\Medium Level\\Medium Level-2950184.onnx",
+                "reward": null,
+                "creation_time": 1709569114.0270333,
+                "auxillary_file_paths": [
+                    "results\\TestMedium\\Medium Level\\Medium Level-2950184.pt"
+                ]
+            },
+            {
+                "steps": 2999951,
+                "file_path": "results\\TestMedium\\Medium Level\\Medium Level-2999951.onnx",
+                "reward": -106.52399142697561,
+                "creation_time": 1709569432.3280125,
+                "auxillary_file_paths": [
+                    "results\\TestMedium\\Medium Level\\Medium Level-2999951.pt"
+                ]
+            },
+            {
+                "steps": 3499953,
+                "file_path": "results\\TestMedium\\Medium Level\\Medium Level-3499953.onnx",
+                "reward": -101.74938246004844,
+                "creation_time": 1709570303.3225474,
+                "auxillary_file_paths": [
+                    "results\\TestMedium\\Medium Level\\Medium Level-3499953.pt"
+                ]
+            },
+            {
+                "steps": 3869416,
+                "file_path": "results\\TestMedium\\Medium Level\\Medium Level-3869416.onnx",
+                "reward": -98.8210825920105,
+                "creation_time": 1709570949.6275415,
+                "auxillary_file_paths": [
+                    "results\\TestMedium\\Medium Level\\Medium Level-3869416.pt"
+                ]
+            },
+            {
+                "steps": 3885263,
+                "file_path": "results\\TestMedium\\Medium Level\\Medium Level-3885263.onnx",
+                "reward": -99.28596356450295,
+                "creation_time": 1709571008.0020218,
+                "auxillary_file_paths": [
+                    "results\\TestMedium\\Medium Level\\Medium Level-3885263.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 3885263,
+            "file_path": "results\\TestMedium\\Medium Level.onnx",
+            "reward": -99.28596356450295,
+            "creation_time": 1709571008.0020218,
+            "auxillary_file_paths": [
+                "results\\TestMedium\\Medium Level\\Medium Level-3885263.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.13.1+cu117"
+    },
+    "Small Level": {
+        "checkpoints": [
+            {
+                "steps": 0,
+                "file_path": "results\\TestMedium\\Small Level\\Small Level-0.onnx",
+                "reward": null,
+                "creation_time": 1709565088.0805259,
+                "auxillary_file_paths": [
+                    "results\\TestMedium\\Small Level\\Small Level-0.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 0,
+            "file_path": "results\\TestMedium\\Small Level.onnx",
+            "reward": null,
+            "creation_time": 1709565088.0805259,
+            "auxillary_file_paths": [
+                "results\\TestMedium\\Small Level\\Small Level-0.pt"
+            ]
+        }
+    }
+}

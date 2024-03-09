@@ -1,0 +1,83 @@
+{
+    "Large  Level": {
+        "checkpoints": [
+            {
+                "steps": 499968,
+                "file_path": "results\\TestLarge2\\Large  Level\\Large  Level-499968.onnx",
+                "reward": -518.2871203422546,
+                "creation_time": 1709721194.5713594,
+                "auxillary_file_paths": [
+                    "results\\TestLarge2\\Large  Level\\Large  Level-499968.pt"
+                ]
+            },
+            {
+                "steps": 999944,
+                "file_path": "results\\TestLarge2\\Large  Level\\Large  Level-999944.onnx",
+                "reward": -504.1835132576525,
+                "creation_time": 1709722318.3166988,
+                "auxillary_file_paths": [
+                    "results\\TestLarge2\\Large  Level\\Large  Level-999944.pt"
+                ]
+            },
+            {
+                "steps": 1499996,
+                "file_path": "results\\TestLarge2\\Large  Level\\Large  Level-1499996.onnx",
+                "reward": -508.08413990877443,
+                "creation_time": 1709723478.2029102,
+                "auxillary_file_paths": [
+                    "results\\TestLarge2\\Large  Level\\Large  Level-1499996.pt"
+                ]
+            },
+            {
+                "steps": 1999967,
+                "file_path": "results\\TestLarge2\\Large  Level\\Large  Level-1999967.onnx",
+                "reward": -506.92548004398503,
+                "creation_time": 1709724626.5826328,
+                "auxillary_file_paths": [
+                    "results\\TestLarge2\\Large  Level\\Large  Level-1999967.pt"
+                ]
+            },
+            {
+                "steps": 2420920,
+                "file_path": "results\\TestLarge2\\Large  Level\\Large  Level-2420920.onnx",
+                "reward": -504.15108609199524,
+                "creation_time": 1709725593.7274454,
+                "auxillary_file_paths": [
+                    "results\\TestLarge2\\Large  Level\\Large  Level-2420920.pt"
+                ]
+            },
+            {
+                "steps": 2499976,
+                "file_path": "results\\TestLarge2\\Large  Level\\Large  Level-2499976.onnx",
+                "reward": -501.0410878499349,
+                "creation_time": 1709725815.1093507,
+                "auxillary_file_paths": [
+                    "results\\TestLarge2\\Large  Level\\Large  Level-2499976.pt"
+                ]
+            },
+            {
+                "steps": 2770328,
+                "file_path": "results\\TestLarge2\\Large  Level\\Large  Level-2770328.onnx",
+                "reward": -502.4135932922363,
+                "creation_time": 1709726450.6730123,
+                "auxillary_file_paths": [
+                    "results\\TestLarge2\\Large  Level\\Large  Level-2770328.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 2770328,
+            "file_path": "results\\TestLarge2\\Large  Level.onnx",
+            "reward": -502.4135932922363,
+            "creation_time": 1709726450.6730123,
+            "auxillary_file_paths": [
+                "results\\TestLarge2\\Large  Level\\Large  Level-2770328.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.13.1+cu117"
+    }
+}

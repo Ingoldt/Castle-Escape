@@ -1,0 +1,38 @@
+{
+    "Generate Level": {
+        "checkpoints": [
+            {
+                "steps": 499996,
+                "file_path": "results\\TEST\\Generate Level\\Generate Level-499996.onnx",
+                "reward": -43.373575200688656,
+                "creation_time": 1709288657.765954,
+                "auxillary_file_paths": [
+                    "results\\TEST\\Generate Level\\Generate Level-499996.pt"
+                ]
+            },
+            {
+                "steps": 500416,
+                "file_path": "results\\TEST\\Generate Level\\Generate Level-500416.onnx",
+                "reward": -43.2009616448329,
+                "creation_time": 1709288657.9233975,
+                "auxillary_file_paths": [
+                    "results\\TEST\\Generate Level\\Generate Level-500416.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 500416,
+            "file_path": "results\\TEST\\Generate Level.onnx",
+            "reward": -43.2009616448329,
+            "creation_time": 1709288657.9233975,
+            "auxillary_file_paths": [
+                "results\\TEST\\Generate Level\\Generate Level-500416.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.13.1+cu117"
+    }
+}

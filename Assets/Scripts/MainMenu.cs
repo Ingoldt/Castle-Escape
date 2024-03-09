@@ -20,6 +20,13 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadSceneAsync(_levelScene);
     }
 
+    public void ReturnToMainMenu()
+    {
+        // Re-enable the main menu objects when returning to the main menu
+        // load scene
+     
+    }
+
     public void QuitGame()
     {
         Debug.Log("Quit");

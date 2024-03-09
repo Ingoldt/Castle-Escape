@@ -2,96 +2,106 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using UnityEngine.Tilemaps;
-using Unity.Barracuda;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Unity.MLAgents.Actuators;
-using UnityEditor.Experimental.GraphView;
-using Unity.MLAgents.Policies;
-using System.Diagnostics.Tracing;
-using System;
+using static LevelInfoScriptableObject;
 
 public class LevelGeneratorAgent : Agent
 {
 
-    private BehaviorParameters behaviorParameters;
-
     // Reference assigned in the Inspector
     [SerializeField]
-    private LevelGeneration levelGeneration;
+    private LevelGeneration _levelGeneration;
     [SerializeField]
-    private TileManager tileManager;
-    
+    private TileManager _tileManager;
+
     TileBase[,] previousState;
     TileBase[,] currentState;
     private int prevX;
     private int prevY;
     private int height;
     private int width;
-
+    private const float epsilon = 0.3f;
     private float totalDirectReward;
 
     private const float TilePlacementReward = 1f;
     private const float CloseDistancePenalty = -0.5f;
     private const float MediumDistanceReward = 0.1f;
     private const float FarDistanceReward = 0.5f;
-    private const float NotPlayablePenalty = -5f;
-    private const float DistrucableReward = 1.2f;
+    private const float NotPlayablePenalty = -35f;
+    private const float DistrucableReward = 0.6f;
     private const float PlayableReward = 50f;
     private const float ConstraintReward = 5f;
-    private const float WallConstraintPenalty = -1.4f;
+    private const float WallConstraintPenalty = -1.6f;
     private const float DoorAmountPenalty = -1f;
     private const float DoorRotationReward = 0.5f;
-    private const float TileMatchingReward = 10f;
+    private const float TileMatchingReward = 20f;
     private const float SpawnTilePenalty = -5f;
 
+    private static bool generateNewLevel = true;
 
+    // Define a simple event to notify when a level is generated
+    public delegate void LevelGeneratedEventHandler();
+    public static event LevelGeneratedEventHandler OnLevelGenerated;
 
-    /*
-    public void UpdateBehaviorParameters()
+    public static bool ShouldGenerateNewLevel
     {
-        behaviorParameters = GetComponent<BehaviorParameters>();
-        if (behaviorParameters != null)
-        {
-            Debug.Log($"Vector Observation Size: {behaviorParameters.BrainParameters.VectorObservationSize}");
+        get { return generateNewLevel; }
+        set { generateNewLevel = value; }
+    }
 
-            // Set Branch size for each discrete branch
-            // int numberOfBranches = behaviorParameters.
+    private void Awake()
+    {
+        // Access the LevelGeneration and TileManager components on the same GameObject
+        _levelGeneration = GetComponent<LevelGeneration>();
+        _tileManager = GetComponent<TileManager>();
+
+        if (_levelGeneration == null)
+        {
+            Debug.LogError("LevelGeneration component not found on the same GameObject as Agent.");
+        }
+
+        if (_tileManager == null)
+        {
+            Debug.LogError("TileManager component not found on the same GameObject as Agent.");
         }
     }
-    */
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        GameController.OnGenerateLevel += HandleGenerateLevel;
+    }
 
-    public override void OnEpisodeBegin()
-    {      
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        GameController.OnGenerateLevel -= HandleGenerateLevel;
+    }
+
+    private void HandleGenerateLevel(LevelInfoScriptableObject.BaseType baseType)
+    {
+        // Handle the event and generate the level with the specified baseType
+        Debug.Log("Level Agent handles Level Generation");
+
         totalDirectReward = 0f;
-        // reset the list of the Tilemanager
-        tileManager.ResetState();
-        // reset level for inference phase
-        //levelGeneration.ResetLevel();
+        _tileManager.ResetState();
+        _levelGeneration.CreateLevel(baseType);
 
-        // select a random level for new trainbing episode
-        levelGeneration.ResetLevelTraining();
-        // 20% of the tiles in the level can be altered by the agend rounding it up to the nearest integer
-        base.MaxStep = (int)(levelGeneration.GetLevelInfo.tileCount * 0.15f + 0.5f);
+        if (_levelGeneration.GetLevelInfo.PublicBaseType == LevelInfoScriptableObject.BaseType.Medium)
+        {
+            base.MaxStep = Mathf.FloorToInt(_levelGeneration.GetLevelInfo.tileCount * 0.12f);
+        }
+        else
+        {
+            base.MaxStep = Mathf.FloorToInt(_levelGeneration.GetLevelInfo.tileCount * 0.10f);
+        }
     }
 
     public override void CollectObservations(VectorSensor sensor)
-    {
-        if (levelGeneration == null)
-        {
-            Debug.LogError("LevelGeneration is not assigned.");
-            return;
-        }
-
-        if (tileManager == null)
-        {
-            Debug.LogError("TileManager is not assigned.");
-            return;
-        }
-        
-        previousState = levelGeneration.GetPreviousState;
-        currentState = levelGeneration.GetCurrentState;
+    {      
+        previousState = _levelGeneration.GetPreviousState;
+        currentState = _levelGeneration.GetCurrentState;
 
         // Flatten the 2d array into a 1D array and add it to the observation
         FlattenObservations(sensor, previousState);
@@ -102,62 +112,77 @@ public class LevelGeneratorAgent : Agent
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        // read action from action buffer
-        int x = (int)actions.DiscreteActions[0];
-        int y = (int)actions.DiscreteActions[1];
-        int newTileValue = (int)actions.DiscreteActions[2];
-
-        /*
-        Debug.Log("Agent action: " + newTileValue);
-        TileBase tile = tileManager.GetTileFromID(newTileValue);
-        Debug.Log("Retrieved Tile: " + (tile != null ? tile.name : "null"));
-        */
-
-        // replace tile at the given coordinates
-        if (levelGeneration.GetLevelInfo != null)
+        if (generateNewLevel)
         {
-            // check if coordinates are valid
-            if (x >= 0 && x < width && y >= 0 && y < height)
+            // read action from action buffer
+            int x;
+            int y;
+            int newTileValue;
+
+            // Exploration-exploitation strategy
+            if (Random.value < epsilon)
             {
-                levelGeneration.ReplaceTile(x, y, newTileValue);
-                // update visuals
-                levelGeneration.UpdateTilemap(x, y);
-                // locate all tile types
-                tileManager.ResetLists();
-                tileManager.LocateCategorizeTiles(currentState);
+                // Exploration: Choose a random action excluding a 2x2 thick layer from the borders (walls)
+                x = Random.Range(3, width - 2);
+                y = Random.Range(3, height - 2);
+                // excluding spawn and door tiles
+                newTileValue = Random.Range(6, _tileManager.GetTileTypeDictionaryCount());
+            }
+            else
+            {
+                // Exploitation: Choose the action with the highest estimated value
+                x = (int)actions.DiscreteActions[0];
+                y = (int)actions.DiscreteActions[1];
+                newTileValue = (int)actions.DiscreteActions[2];
+            }
 
-                // direct reward calculation
-                float directReward = CalculateExplorationReward(x, y, prevX, prevY, newTileValue);
-                AddReward(directReward);
-                totalDirectReward += directReward;
-
-                //Debug.Log("direct reward for action: " + directReward);
-                //Debug.Log("total direct Rewards this episode: " + totalDirectReward);
-
-                // Save current action's coordinates as previous action
-                // needed for poximity check
-                prevX = x;
-                prevY = y;
-
-                // Check if the episode is about to end
-                if (StepCount >= MaxStep - 1)
+            // replace tile at the given coordinates
+            if (_levelGeneration.GetLevelInfo != null)
+            {
+                // check if coordinates are valid
+                if (x >= 0 && x < width && y >= 0 && y < height)
                 {
-                    float indirectReward = CalculateIndirectReward(); // Implement CalculateIndirectReward as needed
-                    AddReward(indirectReward); // Add indirect reward during the episode
+                    _levelGeneration.ReplaceTile(x, y, newTileValue);
+                    // update visuals
+                    //_levelGenerationScript.UpdateTilemapTraining(x, y);
+                    // locate all tile types
+                    _tileManager.ResetLists();
+                    _tileManager.LocateCategorizeTiles(currentState);
 
-                    //Debug.Log("inirect Rewards this episode: " + indirectReward);
-                    EndEpisode();
+                    // direct reward calculation
+                    float directReward = CalculateExplorationReward(x, y, prevX, prevY, newTileValue);
+                    AddReward(directReward);
+                    totalDirectReward += directReward;
+
+                    // Save current action's coordinates as previous action
+                    // needed for poximity check
+                    prevX = x;
+                    prevY = y;
+
+                    // Check if the episode is about to end
+                    if (StepCount == MaxStep)
+                    {
+                        float indirectReward = CalculateIndirectReward();
+                        AddReward(indirectReward); // Add indirect reward during the episode
+                        // build level after agent is finished
+                        _levelGeneration.UpdateTilemap(currentState);
+
+                        Debug.Log("generateNewLevel flag: " + generateNewLevel);
+                        EndEpisode();
+                        // Trigger a event when the level is generated
+                        OnLevelGenerated?.Invoke();
+                    }
                 }
             }
-        }
+        }      
     }
 
     // Flatten the Tilemap for the Agent's Observation
     private void FlattenObservations(VectorSensor sensor, TileBase[,] tilemap)
     {
-        width = levelGeneration.GetLevelInfo.width;
-        height = levelGeneration.GetLevelInfo.height;
-        //Debug.Log("Level: "+ levelGeneration.GetLevelInfo.name + "height: " + height + "Width: " + width + "Variation: " + levelGeneration.GetLevelInfo.PublicVariation);
+        width = _levelGeneration.GetLevelInfo.width;
+        height = _levelGeneration.GetLevelInfo.height;
+        //Debug.Log("Level: "+ _levelGenerationScript.GetLevelInfo.name + "height: " + height + "Width: " + width + "Variation: " + _levelGenerationScript.GetLevelInfo.PublicVariation);
         
         
         if (width != 0 && height != 0)
@@ -167,7 +192,7 @@ public class LevelGeneratorAgent : Agent
                 for (int y = 0; y < height; y++)
                 {
                     TileBase tile = tilemap[x, y];
-                    int tileValue = tileManager.GetTileValue(tile); // Convert TileBase to an integer value
+                    int tileValue = _tileManager.GetTileValue(tile); // Convert TileBase to an integer value
                     sensor.AddObservation(tileValue);
                 }
             }
@@ -189,7 +214,7 @@ public class LevelGeneratorAgent : Agent
         float distance = DistanceToPreviousTile(x, y, prevX, prevY);
         float reward = 0f;
 
-        if (levelGeneration.GetPreviousState[x, y] != tileManager.GetTileFromID(newTileValue))
+        if (_levelGeneration.GetPreviousState[x, y] != _tileManager.GetTileFromID(newTileValue))
         {
             // reward for replacing a tile with a new Tile
             reward += TilePlacementReward; 
@@ -199,13 +224,18 @@ public class LevelGeneratorAgent : Agent
                 // Reserved tiles (Door Tiles)
                 return reward += TileConstraints(x, y, newTileValue);
             }
-            else if (newTileValue == 4)
+            else if (newTileValue == 4) 
+            {
+                // Spawn Tile
+                return reward += TileConstraints(x, y, newTileValue);
+            }
+            else if (newTileValue == 5)
             {
                 // wall tiles
                 // more close together placement of wall tiles
                 return reward += TileConstraints(x, y, newTileValue);
             }
-            else if (tileManager.IsDestructibleTile(tileManager.GetTileFromID(newTileValue)))
+            else if (_tileManager.IsDestructibleTile(_tileManager.GetTileFromID(newTileValue)))
             {
                 // barrel
                 return reward += DistrucableReward;
@@ -243,15 +273,13 @@ public class LevelGeneratorAgent : Agent
         float reward = 0f;
 
         /*
-        Debug.Log("Tile ID: " + newTileValue);
+        TileBase tile = _tileManagerScript.GetTileFromID(newTileValue);
+        Debug.Log("Tile ID: " + newTileValue + " Tile: " + tile);
         Debug.Log("coordinates " + " x " + x + " y " + y);
-        TileBase tile = tileManager.GetTileFromID(newTileValue);
-        Debug.Log("Retrieved Tile: " + (tile != null ? tile.name : "null"));
         */
 
-        int doorAmount = tileManager.DoorLocations.Count;
-        int SpawnAmount = tileManager.SpawnLocations.Count;
-        string tileName = tileManager.GetTileFromID(newTileValue)?.name;
+        int doorAmount = _tileManager.DoorLocations.Count;
+        int SpawnAmount = _tileManager.SpawnLocations.Count;
 
         // Calculate Manhattan distances to each side of the grid
         int distanceTop = y;
@@ -266,20 +294,20 @@ public class LevelGeneratorAgent : Agent
         int[] yOffset;
 
         // want to set spawn tile while spawn tiles are at max amount
-        if(newTileValue == 5)
+        if (newTileValue == 4)
         {
             if (SpawnAmount >= 1)
             {
-                return reward = SpawnTilePenalty;
+                return reward = SpawnAmount * SpawnTilePenalty;
             }
         }
-        
+
         // direct not playable penalty
         else if (doorAmount > 1 || SpawnAmount > 1)
         {
             reward += doorAmount * DoorAmountPenalty + SpawnAmount * SpawnTilePenalty;
         }
-        
+
         // door tile top, right, bottom, left
         else if (newTileValue <= 3)
         {
@@ -304,7 +332,7 @@ public class LevelGeneratorAgent : Agent
                 yOffset = new int[] { -1, -1, 0, 1, 1 };
             }
 
-            int counter = CheckNeighborsForTile(x, y, xOffset, yOffset, tileManager.tileTypes.WallList);
+            int counter = CheckNeighborsForTile(x, y, xOffset, yOffset, _tileManager.tileTypes.WallList);
             reward = ConstraintReward + (counter * WallConstraintPenalty) + (doorAmount * DoorAmountPenalty);
 
             // Check if the door is placed on the side with the minimum distance
@@ -316,14 +344,21 @@ public class LevelGeneratorAgent : Agent
             }
             return reward;
         }
-        
-        else if (newTileValue == 4)
+
+        else if (newTileValue == 5)
         {
             xOffset = new int[] { 0, -1, 1, 0 };
             yOffset = new int[] { -1, 0, 0, 1 };
 
-            int counter = CheckNeighborsForTile(x, y, xOffset, yOffset, tileManager.tileTypes.WallList);
-            reward = ConstraintReward + (counter * WallConstraintPenalty);
+            if ((x == 2 || x == width - 3) && (y >= 2 && y <= height - 3) || (x >= 2 && x <= width - 3) && (y == 2 || y == height - 3))
+            {                           
+                return reward = ConstraintReward * -0.5f;
+            }
+            else
+            {            
+                int counter = CheckNeighborsForTile(x, y, xOffset, yOffset, _tileManager.tileTypes.WallList);
+                reward = ConstraintReward + (counter * WallConstraintPenalty);
+            }
         }
         return reward;
     }
@@ -341,7 +376,7 @@ public class LevelGeneratorAgent : Agent
             if (neighborX >= 0 && neighborX < width && neighborY >= 0 && neighborY < height)
             {
                 // check for tile to not be in a certain list / not from a certain type
-                if (!tileManager.IsTileInList(currentState[neighborX, neighborY], tileList))
+                if (!_tileManager.IsTileInList(currentState[neighborX, neighborY], tileList))
                 {
                     // counts how many tiles are falsely placed given the constraint
                     counter += 1;
@@ -367,8 +402,8 @@ public class LevelGeneratorAgent : Agent
     {
         float reward = 0f;
 
-        List<Vector2Int> doorLocations = tileManager.DoorLocations;
-        List<Vector2Int> spawnLocations = tileManager.SpawnLocations;
+        List<Vector2Int> doorLocations = _tileManager.DoorLocations;
+        List<Vector2Int> spawnLocations = _tileManager.SpawnLocations;
         int doorCount = doorLocations.Count;
         int spawnCount = spawnLocations.Count;
         //Debug.Log("Door Amount: " + doorCount + ", Spawn AMount: " + spawnCount);
@@ -378,17 +413,21 @@ public class LevelGeneratorAgent : Agent
         {
             if(IsReachable(doorLocations, spawnLocations))
             {
-                levelGeneration.GetLevelInfo.playability = true;
+                _levelGeneration.GetLevelInfo.playability = true;
+                generateNewLevel = false;
                 Debug.Log("Level is playable Agent achieve it's goal");
+                Debug.Log("Agent Script shouldGenerateLevel: " + generateNewLevel);
                 return reward += PlayableReward;
             }
             return reward;
         }
         else
         {
-            levelGeneration.GetLevelInfo.playability = false;
-            Debug.Log("Level is not playable");
-            return reward += NotPlayablePenalty * 5;
+            _levelGeneration.GetLevelInfo.playability = false;
+            generateNewLevel = true;
+            Debug.Log("Level is not playable, Reward: " + reward + NotPlayablePenalty);
+            Debug.Log("Agent Script shouldGenerateLevel: " + generateNewLevel);
+            return reward += NotPlayablePenalty;
         }
     }
 
@@ -422,16 +461,16 @@ public class LevelGeneratorAgent : Agent
             for (int y = 0; y < borderThickness; y++)
             {
                 // top
-                if (!tileManager.IsWallTile(currentState[x, y]) || !tileManager.IsDoorTile(currentState[x, y]))
+                if (!_tileManager.IsWallTile(currentState[x, y]) && !_tileManager.IsDoorTile(currentState[x, y]))
                 {
                     // Penalize for non-wall tiles in the border
-                    reward += WallConstraintPenalty;
+                    reward += WallConstraintPenalty * 2;
                 }
                 // bottom
-                if (!tileManager.IsWallTile(currentState[x, height - 1 - y]) || !tileManager.IsDoorTile(currentState[x, height - 1 - y]))
+                if (!_tileManager.IsWallTile(currentState[x, height - 1 - y]) && !_tileManager.IsDoorTile(currentState[x, height - 1 - y]))
                 {
                     // Penalize for non-wall tiles in the border
-                    reward += WallConstraintPenalty;
+                    reward += WallConstraintPenalty * 2;
                 }
             }
         }
@@ -442,16 +481,16 @@ public class LevelGeneratorAgent : Agent
             for (int x = 0; x < borderThickness; x++)
             {
                 // left
-                if (!tileManager.IsWallTile(currentState[x, y]) || !tileManager.IsDoorTile(currentState[x, y]))
+                if (!_tileManager.IsWallTile(currentState[x, y]) && !_tileManager.IsDoorTile(currentState[x, y]))
                 {
                     // Penalize for non-wall tiles in the border
-                    reward += WallConstraintPenalty;
+                    reward += WallConstraintPenalty * 2;
                 }
                 // right
-                if (tileManager.IsWallTile(currentState[width - 1 - x, y]) || !tileManager.IsDoorTile(currentState[width - 1 - x, y]))
+                if (_tileManager.IsWallTile(currentState[width - 1 - x, y]) && !_tileManager.IsDoorTile(currentState[width - 1 - x, y]))
                 {
                     // Penalize for non-wall tiles in the border
-                    reward += WallConstraintPenalty;
+                    reward += WallConstraintPenalty * 2;
                 }
             }
         }

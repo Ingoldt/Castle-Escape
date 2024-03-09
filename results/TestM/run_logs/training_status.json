@@ -1,0 +1,73 @@
+{
+    "Medium Level": {
+        "checkpoints": [
+            {
+                "steps": 53000,
+                "file_path": "results\\TestM\\Medium Level\\Medium Level-53000.onnx",
+                "reward": -240.7831604003906,
+                "creation_time": 1709318749.5694113,
+                "auxillary_file_paths": [
+                    "results\\TestM\\Medium Level\\Medium Level-53000.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 53000,
+            "file_path": "results\\TestM\\Medium Level.onnx",
+            "reward": -240.7831604003906,
+            "creation_time": 1709318749.5694113,
+            "auxillary_file_paths": [
+                "results\\TestM\\Medium Level\\Medium Level-53000.pt"
+            ]
+        }
+    },
+    "Small Level": {
+        "checkpoints": [
+            {
+                "steps": 53032,
+                "file_path": "results\\TestM\\Small Level\\Small Level-53032.onnx",
+                "reward": -141.3094510436058,
+                "creation_time": 1709318749.6289113,
+                "auxillary_file_paths": [
+                    "results\\TestM\\Small Level\\Small Level-53032.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 53032,
+            "file_path": "results\\TestM\\Small Level.onnx",
+            "reward": -141.3094510436058,
+            "creation_time": 1709318749.6289113,
+            "auxillary_file_paths": [
+                "results\\TestM\\Small Level\\Small Level-53032.pt"
+            ]
+        }
+    },
+    "Large  Level": {
+        "checkpoints": [
+            {
+                "steps": 53010,
+                "file_path": "results\\TestM\\Large  Level\\Large  Level-53010.onnx",
+                "reward": -499.45511076185437,
+                "creation_time": 1709318749.684411,
+                "auxillary_file_paths": [
+                    "results\\TestM\\Large  Level\\Large  Level-53010.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 53010,
+            "file_path": "results\\TestM\\Large  Level.onnx",
+            "reward": -499.45511076185437,
+            "creation_time": 1709318749.684411,
+            "auxillary_file_paths": [
+                "results\\TestM\\Large  Level\\Large  Level-53010.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.13.1+cu117"
+    }
+}

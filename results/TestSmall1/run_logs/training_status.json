@@ -1,0 +1,119 @@
+{
+    "Small Level": {
+        "checkpoints": [
+            {
+                "steps": 499984,
+                "file_path": "results\\TestSmall1\\Small Level\\Small Level-499984.onnx",
+                "reward": -43.27561390740531,
+                "creation_time": 1709640825.3103576,
+                "auxillary_file_paths": [
+                    "results\\TestSmall1\\Small Level\\Small Level-499984.pt"
+                ]
+            },
+            {
+                "steps": 999988,
+                "file_path": "results\\TestSmall1\\Small Level\\Small Level-999988.onnx",
+                "reward": -43.50767706411856,
+                "creation_time": 1709641484.9380157,
+                "auxillary_file_paths": [
+                    "results\\TestSmall1\\Small Level\\Small Level-999988.pt"
+                ]
+            },
+            {
+                "steps": 1148920,
+                "file_path": "results\\TestSmall1\\Small Level\\Small Level-1148920.onnx",
+                "reward": -42.658857985337576,
+                "creation_time": 1709641744.025682,
+                "auxillary_file_paths": [
+                    "results\\TestSmall1\\Small Level\\Small Level-1148920.pt"
+                ]
+            },
+            {
+                "steps": 1499994,
+                "file_path": "results\\TestSmall1\\Small Level\\Small Level-1499994.onnx",
+                "reward": -145.78390315648775,
+                "creation_time": 1709642264.0410903,
+                "auxillary_file_paths": [
+                    "results\\TestSmall1\\Small Level\\Small Level-1499994.pt"
+                ]
+            },
+            {
+                "steps": 1999998,
+                "file_path": "results\\TestSmall1\\Small Level\\Small Level-1999998.onnx",
+                "reward": -148.87038616105622,
+                "creation_time": 1709642910.6232455,
+                "auxillary_file_paths": [
+                    "results\\TestSmall1\\Small Level\\Small Level-1999998.pt"
+                ]
+            },
+            {
+                "steps": 2328696,
+                "file_path": "results\\TestSmall1\\Small Level\\Small Level-2328696.onnx",
+                "reward": -148.05725435625044,
+                "creation_time": 1709643347.419671,
+                "auxillary_file_paths": [
+                    "results\\TestSmall1\\Small Level\\Small Level-2328696.pt"
+                ]
+            },
+            {
+                "steps": 2499984,
+                "file_path": "results\\TestSmall1\\Small Level\\Small Level-2499984.onnx",
+                "reward": -146.05913162231445,
+                "creation_time": 1709643586.392018,
+                "auxillary_file_paths": [
+                    "results\\TestSmall1\\Small Level\\Small Level-2499984.pt"
+                ]
+            },
+            {
+                "steps": 2999998,
+                "file_path": "results\\TestSmall1\\Small Level\\Small Level-2999998.onnx",
+                "reward": -139.7844852350151,
+                "creation_time": 1709644271.14359,
+                "auxillary_file_paths": [
+                    "results\\TestSmall1\\Small Level\\Small Level-2999998.pt"
+                ]
+            },
+            {
+                "steps": 3140272,
+                "file_path": "results\\TestSmall1\\Small Level\\Small Level-3140272.onnx",
+                "reward": -130.57042407989502,
+                "creation_time": 1709644463.630987,
+                "auxillary_file_paths": [
+                    "results\\TestSmall1\\Small Level\\Small Level-3140272.pt"
+                ]
+            },
+            {
+                "steps": 3499984,
+                "file_path": "results\\TestSmall1\\Small Level\\Small Level-3499984.onnx",
+                "reward": -221.91450302124022,
+                "creation_time": 1709727490.6488025,
+                "auxillary_file_paths": [
+                    "results\\TestSmall1\\Small Level\\Small Level-3499984.pt"
+                ]
+            },
+            {
+                "steps": 3790576,
+                "file_path": "results\\TestSmall1\\Small Level\\Small Level-3790576.onnx",
+                "reward": -218.94591628588162,
+                "creation_time": 1709727880.4375954,
+                "auxillary_file_paths": [
+                    "results\\TestSmall1\\Small Level\\Small Level-3790576.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 3790576,
+            "file_path": "results\\TestSmall1\\Small Level.onnx",
+            "reward": -218.94591628588162,
+            "creation_time": 1709727880.4375954,
+            "auxillary_file_paths": [
+                "results\\TestSmall1\\Small Level\\Small Level-3790576.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.13.1+cu117"
+    }
+}

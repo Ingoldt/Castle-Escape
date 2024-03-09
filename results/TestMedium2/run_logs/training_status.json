@@ -1,0 +1,137 @@
+{
+    "Medium Level": {
+        "checkpoints": [
+            {
+                "steps": 499960,
+                "file_path": "results\\TestMedium2\\Medium Level\\Medium Level-499960.onnx",
+                "reward": null,
+                "creation_time": 1709633922.4374957,
+                "auxillary_file_paths": [
+                    "results\\TestMedium2\\Medium Level\\Medium Level-499960.pt"
+                ]
+            },
+            {
+                "steps": 999970,
+                "file_path": "results\\TestMedium2\\Medium Level\\Medium Level-999970.onnx",
+                "reward": -118.00025177001953,
+                "creation_time": 1709634775.257441,
+                "auxillary_file_paths": [
+                    "results\\TestMedium2\\Medium Level\\Medium Level-999970.pt"
+                ]
+            },
+            {
+                "steps": 1499980,
+                "file_path": "results\\TestMedium2\\Medium Level\\Medium Level-1499980.onnx",
+                "reward": -158.10025024414062,
+                "creation_time": 1709635605.3669982,
+                "auxillary_file_paths": [
+                    "results\\TestMedium2\\Medium Level\\Medium Level-1499980.pt"
+                ]
+            },
+            {
+                "steps": 1999982,
+                "file_path": "results\\TestMedium2\\Medium Level\\Medium Level-1999982.onnx",
+                "reward": -121.03358205159505,
+                "creation_time": 1709636565.6790123,
+                "auxillary_file_paths": [
+                    "results\\TestMedium2\\Medium Level\\Medium Level-1999982.pt"
+                ]
+            },
+            {
+                "steps": 2411464,
+                "file_path": "results\\TestMedium2\\Medium Level\\Medium Level-2411464.onnx",
+                "reward": -121.63931268453598,
+                "creation_time": 1709637264.4091327,
+                "auxillary_file_paths": [
+                    "results\\TestMedium2\\Medium Level\\Medium Level-2411464.pt"
+                ]
+            },
+            {
+                "steps": 2499992,
+                "file_path": "results\\TestMedium2\\Medium Level\\Medium Level-2499992.onnx",
+                "reward": -98.58127717048892,
+                "creation_time": 1709637464.8905833,
+                "auxillary_file_paths": [
+                    "results\\TestMedium2\\Medium Level\\Medium Level-2499992.pt"
+                ]
+            },
+            {
+                "steps": 2999960,
+                "file_path": "results\\TestMedium2\\Medium Level\\Medium Level-2999960.onnx",
+                "reward": -99.76998735243275,
+                "creation_time": 1709638284.0026462,
+                "auxillary_file_paths": [
+                    "results\\TestMedium2\\Medium Level\\Medium Level-2999960.pt"
+                ]
+            },
+            {
+                "steps": 3499996,
+                "file_path": "results\\TestMedium2\\Medium Level\\Medium Level-3499996.onnx",
+                "reward": -68.52200556558276,
+                "creation_time": 1709639135.2745678,
+                "auxillary_file_paths": [
+                    "results\\TestMedium2\\Medium Level\\Medium Level-3499996.pt"
+                ]
+            },
+            {
+                "steps": 3635144,
+                "file_path": "results\\TestMedium2\\Medium Level\\Medium Level-3635144.onnx",
+                "reward": -67.76561632156373,
+                "creation_time": 1709639387.45398,
+                "auxillary_file_paths": [
+                    "results\\TestMedium2\\Medium Level\\Medium Level-3635144.pt"
+                ]
+            },
+            {
+                "steps": 3859592,
+                "file_path": "results\\TestMedium2\\Medium Level\\Medium Level-3859592.onnx",
+                "reward": -68.4622833588544,
+                "creation_time": 1709639796.8374763,
+                "auxillary_file_paths": [
+                    "results\\TestMedium2\\Medium Level\\Medium Level-3859592.pt"
+                ]
+            },
+            {
+                "steps": 3999998,
+                "file_path": "results\\TestMedium2\\Medium Level\\Medium Level-3999998.onnx",
+                "reward": -214.42561737829897,
+                "creation_time": 1709645043.9790432,
+                "auxillary_file_paths": [
+                    "results\\TestMedium2\\Medium Level\\Medium Level-3999998.pt"
+                ]
+            },
+            {
+                "steps": 4499966,
+                "file_path": "results\\TestMedium2\\Medium Level\\Medium Level-4499966.onnx",
+                "reward": -217.1785591189601,
+                "creation_time": 1709645926.819485,
+                "auxillary_file_paths": [
+                    "results\\TestMedium2\\Medium Level\\Medium Level-4499966.pt"
+                ]
+            },
+            {
+                "steps": 4805096,
+                "file_path": "results\\TestMedium2\\Medium Level\\Medium Level-4805096.onnx",
+                "reward": -185.84540351231894,
+                "creation_time": 1709646461.3546999,
+                "auxillary_file_paths": [
+                    "results\\TestMedium2\\Medium Level\\Medium Level-4805096.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 4805096,
+            "file_path": "results\\TestMedium2\\Medium Level.onnx",
+            "reward": -185.84540351231894,
+            "creation_time": 1709646461.3546999,
+            "auxillary_file_paths": [
+                "results\\TestMedium2\\Medium Level\\Medium Level-4805096.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.13.1+cu117"
+    }
+}
