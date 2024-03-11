@@ -73,7 +73,7 @@ public class TileManager : MonoBehaviour
         {
             if (kvp.Value == tileID)
             {
-                return kvp.Key;               
+                return kvp.Key;
             }
         }
         // Throw an InvalidOperationException if the ID is not found
@@ -81,42 +81,111 @@ public class TileManager : MonoBehaviour
 
     }
 
-    public void LocateCategorizeTiles(TileBase[,] tilemap)
+    public void InitializeTileLists(TileBase[,] tileBase)
     {
-        int width = tilemap.GetLength(0);
-        int height = tilemap.GetLength(1);
-
-        for (int x = 0; x < width; x++)
+        // Iterate through the tile array
+        for (int x = 0; x < tileBase.GetLength(0); x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < tileBase.GetLength(1); y++)
             {
-                TileBase tile = tilemap[x, y];
-                if (IsWallTile(tile))
+                TileBase currentTile = tileBase[x, y];
+                Vector2Int tilePosition = new Vector2Int(x, y);
+
+                // Categorize the tile based on its type
+                if (IsWallTile(currentTile))
                 {
-                    wallLocations.Add(new Vector2Int(x, y));
+                    wallLocations.Add(tilePosition);
                 }
-                else if (IsFloorTile(tile))
+                else if (IsFloorTile(currentTile))
                 {
-                    floorLocations.Add(new Vector2Int(x, y));
+                    floorLocations.Add(tilePosition);
                 }
-                else if (IsIndestructibleTile(tile))
+                else if (IsIndestructibleTile(currentTile))
                 {
-                    indestructableLocations.Add(new Vector2Int(x, y));
+                    indestructableLocations.Add(tilePosition);
                 }
-                else if (IsDestructibleTile(tile))
+                else if (IsDestructibleTile(currentTile))
                 {
-                    destructableLocations.Add(new Vector2Int(x, y));
+                    destructableLocations.Add(tilePosition);
                 }
-                else if (IsDoorTile(tile))
+                else if (IsDoorTile(currentTile))
                 {
-                    doorLocations.Add(new Vector2Int(x, y));
+                    doorLocations.Add(tilePosition);
                 }
-                else if (IsSpawnTile(tile))
+                else if (IsSpawnTile(currentTile))
                 {
-                    spawnLocations.Add(new Vector2Int(x, y));
+                    spawnLocations.Add(tilePosition);
                 }
             }
         }
+    }
+
+    public void UpdateTileLists(int x, int y, TileBase[,] currentState, TileBase[,] previousState)
+    {
+        TileBase currentTile = currentState[x, y];
+        TileBase previousTile = previousState[x, y];
+
+        if (IsWallTile(currentTile))
+        {
+            if (!IsWallTile(previousTile))
+            {
+                wallLocations.Add(new Vector2Int(x, y));
+                RemoveFromOtherLists(x, y, previousState);
+            }
+        }
+        else if (IsFloorTile(currentTile))
+        {
+            if (!IsFloorTile(previousTile))
+            {
+                floorLocations.Add(new Vector2Int(x, y));
+                RemoveFromOtherLists(x, y, previousState);
+            }
+        }
+        else if (IsIndestructibleTile(currentTile))
+        {
+            if (!IsIndestructibleTile(previousTile))
+            {
+                indestructableLocations.Add(new Vector2Int(x, y));
+                RemoveFromOtherLists(x, y, previousState);
+            }
+        }
+        else if (IsDestructibleTile(currentTile))
+        {
+            if (!IsDestructibleTile(previousTile))
+            {
+                destructableLocations.Add(new Vector2Int(x, y));
+                RemoveFromOtherLists(x, y, previousState);
+            }
+        }
+        else if (IsDoorTile(currentTile))
+        {
+            if (!IsDoorTile(previousTile))
+            {
+                doorLocations.Add(new Vector2Int(x, y));
+                RemoveFromOtherLists(x, y, previousState);
+            }
+        }
+        else if (IsSpawnTile(currentTile))
+        {
+            if (!IsSpawnTile(previousTile))
+            {
+                spawnLocations.Add(new Vector2Int(x, y));
+                RemoveFromOtherLists(x, y, previousState);
+            }
+        }
+
+    }
+
+    private void RemoveFromOtherLists(int x, int y, TileBase[,] previousState)
+    {
+        TileBase previousTile = previousState[x, y];
+
+        if (IsWallTile(previousTile)) wallLocations.Remove(new Vector2Int(x, y));
+        else if (IsFloorTile(previousTile)) floorLocations.Remove(new Vector2Int(x, y));
+        else if (IsIndestructibleTile(previousTile)) indestructableLocations.Remove(new Vector2Int(x, y));
+        else if (IsDestructibleTile(previousTile)) destructableLocations.Remove(new Vector2Int(x, y));
+        else if (IsDoorTile(previousTile)) doorLocations.Remove(new Vector2Int(x, y));
+        else if (IsSpawnTile(previousTile)) spawnLocations.Remove(new Vector2Int(x, y));
     }
 
     // Reset the state, including the tileTypeToID dictionary

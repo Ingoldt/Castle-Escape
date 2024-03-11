@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class GameController : MonoBehaviour
@@ -10,7 +11,8 @@ public class GameController : MonoBehaviour
     private LevelGeneration _levelGenerationScript;
     private TileManager _tileManagerScript;
     private GameObject _agent;
-    private Vector3Int tilemapOrigin;
+    private Vector3Int _tilemapOrigin;
+    private string _currentScene = "";
 
     public GameObject smallAgentPrefab;
     public GameObject mediumAgentPrefab;
@@ -28,12 +30,14 @@ public class GameController : MonoBehaviour
     private void OnEnable()
     {
         LevelGeneratorAgent.OnLevelGenerated += HandleLevelGenerated;
+        SceneManager.sceneLoaded += HandleSceneLoaded;
     }
 
     // Unsubscribing from the LevelGenerated event
     private void OnDisable()
     {
         LevelGeneratorAgent.OnLevelGenerated -= HandleLevelGenerated;
+        SceneManager.sceneLoaded -= HandleSceneLoaded;
     }
 
     private void Awake()
@@ -47,22 +51,22 @@ public class GameController : MonoBehaviour
         playerManagerScript = GetComponent<PlayerManager>();
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        intializeLevel();
+        _currentScene = scene.name;
+        // Check if it's a scene where you want to initialize the level
+        if (!_currentScene.Equals("MainMenuScene"))
+        {
+            initializeLevel();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    private void intializeLevel()
+    private void initializeLevel()
     {
         /// Logic to vary level sizes depending of how many levels the player completed
         LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Large;
+        //LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Medium;
+        //LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Small;
 
         // instanciate agent according to the baseType
         GameObject agentPrefab = null;
@@ -118,7 +122,7 @@ public class GameController : MonoBehaviour
             Debug.LogWarning("GAME CONTROLLER: Generated Level was not playable! Regenerating Level");
             Destroy(_agent);
             Debug.LogWarning("GAME CONTROLLER: leftover agent was destroyed");
-            intializeLevel();
+            initializeLevel();
         }
     }
 
@@ -139,11 +143,11 @@ public class GameController : MonoBehaviour
     private List<Vector3> TileMapToWorldPosition(List<Vector2Int> locations)
     {
         List<Vector3> worldPositions = new List<Vector3>();
-        tilemapOrigin = _levelGenerationScript.GetTilemapOrigin;
+        _tilemapOrigin = _levelGenerationScript.GetTilemapOrigin;
 
         foreach (var position in locations)
         {
-            worldPositions.Add(new Vector3(tilemapOrigin.x + 0.5f + position.x, tilemapOrigin.y + 0.5f + position.y, 0));
+            worldPositions.Add(new Vector3(_tilemapOrigin.x + 0.5f + position.x, _tilemapOrigin.y + 0.5f + position.y, 0));
         }
 
         return worldPositions;

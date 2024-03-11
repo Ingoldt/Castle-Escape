@@ -12,19 +12,12 @@ public class EnemyScript : MonoBehaviour
         return enemyStats.spawnCost;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         if (enemyStats == null)
         {
             Debug.LogWarning("EnemyScriptableObject not assigned to enemy prefab.");
             return;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

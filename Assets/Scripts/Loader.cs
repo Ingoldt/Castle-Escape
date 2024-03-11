@@ -4,18 +4,35 @@ using UnityEngine;
 
 public class Loader : MonoBehaviour
 {
-    public GameObject gameControllerPrefab; 
+    public GameObject gameControllerPrefab;
+    public GameObject menuMenagerPrefab;
+
 
     // Used for initialization
     void Awake()
     {
-        if (gameControllerPrefab != null)
+        EnsureSingleInstance(gameControllerPrefab);
+        EnsureSingleInstance(menuMenagerPrefab);
+    }
+
+    private void EnsureSingleInstance(GameObject prefab)
+    {
+        if (prefab != null)
         {
-            Instantiate(gameControllerPrefab);
+            GameObject existingInstance = GameObject.Find(prefab.name + "(Clone)");
+            if (existingInstance == null)
+            {
+                Instantiate(prefab);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
         else
         {
-            Debug.LogError("GameController prefab is not assigned in the Loader script.");
+            Debug.LogError("Prefab is not assigned in the Loader script.");
         }
     }
 }
+

@@ -12,18 +12,19 @@ public class MainMenu : MonoBehaviour
 
     [Header("Scenes to Load")]
     [SerializeField]
-    private string _levelScene = "TrainingScene";
+    private string _nextScene = "";
 
     public void PlayGame()
     {
 
-        SceneManager.LoadSceneAsync(_levelScene);
+        SceneManager.LoadSceneAsync(_nextScene);
     }
 
     public void ReturnToMainMenu()
     {
         // Re-enable the main menu objects when returning to the main menu
         // load scene
+        SceneManager.LoadScene(_nextScene);
      
     }
 

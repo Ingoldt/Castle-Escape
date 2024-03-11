@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -16,15 +17,21 @@ public class PlayerManager : MonoBehaviour
         return playerPosition;
     }
 
-    private void Awake()
+    // Subscribing to the LevelGenerated event
+    private void OnEnable()
     {
-        cameraScript = FindObjectOfType<Camerafollow>();
+        SceneManager.sceneLoaded += HandleSceneLoaded;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    // Unsubscribing from the LevelGenerated event
+    private void OnDisable()
     {
-        
+        SceneManager.sceneLoaded -= HandleSceneLoaded;
+    }
+
+    private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        cameraScript = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camerafollow>();
     }
 
     // Update is called once per frame

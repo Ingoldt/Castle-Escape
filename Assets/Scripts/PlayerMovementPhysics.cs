@@ -12,11 +12,6 @@ public class PlayerMovementPhysics : MonoBehaviour
     private Vector2 _input;
     private Vector2 _direction;
 
-    private void Start()
-    {
-        GetComponent<Rigidbody2D>();
-    }
-
     private void Update()
     {
         //Processing Inputs

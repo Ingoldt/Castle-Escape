@@ -87,6 +87,7 @@ public class LevelGeneratorAgent : Agent
         totalDirectReward = 0f;
         _tileManager.ResetState();
         _levelGeneration.CreateLevel(baseType);
+        _tileManager.InitializeTileLists(_levelGeneration.GetLevelInfo.InitialState);
 
         if (_levelGeneration.GetLevelInfo.PublicBaseType == LevelInfoScriptableObject.BaseType.Medium)
         {
@@ -144,10 +145,10 @@ public class LevelGeneratorAgent : Agent
                 {
                     _levelGeneration.ReplaceTile(x, y, newTileValue);
                     // update visuals
-                    //_levelGenerationScript.UpdateTilemapTraining(x, y);
-                    // locate all tile types
-                    _tileManager.ResetLists();
-                    _tileManager.LocateCategorizeTiles(currentState);
+                    //_levelGeneration.UpdateTilemapTraining(x, y);
+
+                    // locate all tile types and update tile lists
+                    _tileManager.UpdateTileLists(x, y, _levelGeneration.GetCurrentState, _levelGeneration.GetPreviousState);
 
                     // direct reward calculation
                     float directReward = CalculateExplorationReward(x, y, prevX, prevY, newTileValue);
