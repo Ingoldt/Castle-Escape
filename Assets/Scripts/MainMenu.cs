@@ -6,18 +6,21 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    [Header("Main Menu Objects")]
-    [SerializeField]
-    private GameObject[] _hideObjects;
+    private MenuMenager _menuManager;
 
     [Header("Scenes to Load")]
     [SerializeField]
     private string _nextScene = "";
 
+    private void Start()
+    {
+        _menuManager = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuMenager>();
+    }
+
     public void PlayGame()
     {
-
-        SceneManager.LoadSceneAsync(_nextScene);
+        _menuManager.SetLoadingState(true);
+        _menuManager.LoadNextScene();
     }
 
     public void ReturnToMainMenu()
@@ -33,6 +36,4 @@ public class MainMenu : MonoBehaviour
         Debug.Log("Quit");
         Application.Quit();
     }
-
-
 }

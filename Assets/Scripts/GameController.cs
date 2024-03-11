@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour
     public GameObject mediumAgentPrefab;
     public GameObject largeAgentPrefab;
     public PlayerManager playerManagerScript;
+    public MenuMenager menuMenagerScript;
     public static GameController instance = null;
 
     public bool shouldGenerateLevel;
@@ -25,6 +26,17 @@ public class GameController : MonoBehaviour
     // Signaling a new level should be generated
     public static event Action<LevelInfoScriptableObject.BaseType> OnGenerateLevel;
     public static event Action<List<Vector3>, Vector3> OnSpawnEnemies;
+
+    private void Awake()
+    {
+        if (instance == null) { instance = this; }
+        else if (instance != this) { Destroy(instance); }
+
+        // keep gamemanager for all scenes
+        DontDestroyOnLoad(gameObject);
+
+        playerManagerScript = GetComponent<PlayerManager>();
+    }
 
     // Subscribing to the LevelGenerated event
     private void OnEnable()
@@ -40,15 +52,9 @@ public class GameController : MonoBehaviour
         SceneManager.sceneLoaded -= HandleSceneLoaded;
     }
 
-    private void Awake()
+    private void Start()
     {
-        if (instance == null) { instance = this; }
-        else if (instance != this) { Destroy(instance); }
-
-        // keep gamemanager for all scenes
-        DontDestroyOnLoad(gameObject);
-
-        playerManagerScript = GetComponent<PlayerManager>();
+        menuMenagerScript = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuMenager>();
     }
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -116,6 +122,9 @@ public class GameController : MonoBehaviour
 
             List<Vector3> floorPositions = TileMapToWorldPosition(_tileManagerScript.FloorLocations);
             SpawnEnemies(floorPositions);
+
+            // Disable loading screen
+            menuMenagerScript.SetLoadingState(false);
         }
         else
         {

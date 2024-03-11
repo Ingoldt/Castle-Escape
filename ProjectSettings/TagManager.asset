@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Level
   - LevelAgent
+  - MenuManager
   layers:
   - Default
   - TransparentFX

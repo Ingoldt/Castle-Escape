@@ -1,19 +1,26 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MenuMenager : MonoBehaviour
 {
+    public static MenuMenager instance = null;
+    public GameController gameControllerScript;
     public GameObject eventSystemPrefab;
     public GameObject mainMenuPrefab;
     public GameObject pauseMenuPrefab;
-    public GameObject EndScreen;
+    public GameObject endScreenPrefab;
+    public GameObject loadingScreenPrefab;
+    public TextMeshProUGUI loadingText;
+
+
+    private bool _isLoading = false;
+    private GameObject _loadingScreenInstance;
     private GameObject _eventSystemInstance;
     private GameObject _mainMenuInstance;
     private GameObject _pauseMenuInstance;
     private GameObject _EndScreenInstance;
-    public static MenuMenager instance = null;
 
     private string _currentScene = "";
 
@@ -25,6 +32,16 @@ public class MenuMenager : MonoBehaviour
         // keep gamemanager for all scenes
         DontDestroyOnLoad(gameObject);
         EnsureEventSystem();
+
+        // instanciate loading screen
+
+        if(loadingScreenPrefab != null && _loadingScreenInstance == null)
+        {
+            _loadingScreenInstance = Instantiate(loadingScreenPrefab);
+            Transform loadScreenTransform = _loadingScreenInstance.transform.Find("LoadScreen");
+            loadingText = loadScreenTransform.GetComponentInChildren<TextMeshProUGUI>();
+            DontDestroyOnLoad(_loadingScreenInstance);
+        }
     }
 
     private void OnEnable()
@@ -36,6 +53,11 @@ public class MenuMenager : MonoBehaviour
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= HandleSceneLoaded;
+    }
+
+    private void Start()
+    {
+        gameControllerScript = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
     }
 
     private void Update()
@@ -58,9 +80,60 @@ public class MenuMenager : MonoBehaviour
         }
     }
 
+    public void SetLoadingState(bool isLoading)
+    {
+        _isLoading = isLoading;
+    }
+
+    public void LoadNextScene()
+    {
+        string _nextScene = "";
+
+        switch (_currentScene)
+        {
+            case ("MainMenuScene"):
+                _nextScene = "LevelScene";
+                break;
+            case ("LevelScene"):
+                _nextScene = "NextLevelScene";
+                break;
+            default:
+                _nextScene = "MainMenuScene";
+                break;
+        }
+
+        //depending of current scene
+        StartCoroutine(LoadSceneAsync(_nextScene));
+    }
+
+    IEnumerator LoadSceneAsync(string _nextScene)
+    {
+        SceneManager.LoadSceneAsync(_nextScene);
+
+        // Check if the loading screen should be displayed
+        _loadingScreenInstance.SetActive(true);
+
+        while (_isLoading)
+        {
+            for (int i = 0; i < 3; i++) // Adjust the number of dots as needed
+            {
+                loadingText.text = "Loading" + new string('.', i + 1);
+                yield return new WaitForSeconds(0.5f); // Adjust the time between dots as needed
+            }
+            loadingText.text = "Loading";
+        }
+        // Hide the loading screen after the loop
+        _loadingScreenInstance.SetActive(false);
+    }
+
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         _currentScene = scene.name;
+        if (_currentScene == "MainMenuScene" && _mainMenuInstance == null)
+        {
+            _mainMenuInstance = Instantiate(mainMenuPrefab);
+            //_mainMenuInstance.transform.SetParent(transform);
+        }
     }
 
     private void TogglePauseMenu()

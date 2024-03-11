@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 823626085528021753}
   m_Layer: 0
   m_Name: MenuManager
-  m_TagString: Untagged
+  m_TagString: MenuManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -44,7 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b52426ae12e8fe74a90950d6757afd96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameControllerScript: {fileID: 0}
   eventSystemPrefab: {fileID: 4429965153606541393, guid: c7dcba0d53715904db30959e228e934b, type: 3}
   mainMenuPrefab: {fileID: 7404773022157945835, guid: 275f654ccda935f4f84cdddef92585fc, type: 3}
   pauseMenuPrefab: {fileID: 405158105556775553, guid: a8e20d2c9905707419be0daa1e894518, type: 3}
-  EndScreen: {fileID: 1102451010288120110, guid: ea461e692a8b6224695891aa85c3edc0, type: 3}
+  endScreenPrefab: {fileID: 1102451010288120110, guid: ea461e692a8b6224695891aa85c3edc0, type: 3}
+  loadingScreenPrefab: {fileID: 8907640765501846610, guid: a7d6dc49db053cc47a1eeac12d5ae385, type: 3}
+  loadingText: {fileID: 0}
