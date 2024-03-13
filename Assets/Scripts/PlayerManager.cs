@@ -7,6 +7,7 @@ public class PlayerManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject playerPrefab;
+    private GameObject _playerInstance;
     private Transform playerTransform;
 
     public Vector3 playerPosition;
@@ -15,6 +16,11 @@ public class PlayerManager : MonoBehaviour
     public Vector3 GetPlayerPosition()
     {
         return playerPosition;
+    }
+
+    public GameObject GetPlayerInstance()
+    {
+        return _playerInstance;
     }
 
     // Subscribing to the LevelGenerated event
@@ -47,14 +53,14 @@ public class PlayerManager : MonoBehaviour
     public GameObject SpawnPlayer(Vector3 spawnPosition)
     {
         // Instantiate player at the specified spawn position
-        GameObject player = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+        _playerInstance = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
 
         playerPosition = spawnPosition;
         // Get the Transform component from the spawned player
-        playerTransform = player.GetComponent<Transform>();
+        playerTransform = _playerInstance.GetComponent<Transform>();
 
         cameraScript.SetTarget(playerTransform);
 
-        return player;
+        return _playerInstance;
     }
 }

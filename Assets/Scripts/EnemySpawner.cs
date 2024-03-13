@@ -6,8 +6,10 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField]
     private List<GameObject> _enemyPrefabs;
     [SerializeField]
+    private GameObject _keyPrefab;
     private LevelInfoScriptableObject _levelInfo;
     private List<Vector3> tempLocations;
+    private int enemyCounter;
     public int minDist = 5;
     public bool spawn = false;
 
@@ -15,6 +17,7 @@ public class EnemySpawner : MonoBehaviour
     private void OnEnable()
     {
         GameController.OnSpawnEnemies += HandleSpawnEnemies;
+        EnemyScript.OnEnemyDeath += HandleEnemyDied;
     }
 
     // Unsubscribing from the LevelGenerated event
@@ -30,9 +33,12 @@ public class EnemySpawner : MonoBehaviour
     private void HandleSpawnEnemies(List<Vector3> locations, Vector3 playerPos)
     {
         Debug.Log("EnemySPawner: handling spawn enemies request");
+        enemyCounter = 0;
         _levelInfo = GameObject.FindGameObjectWithTag("LevelAgent").GetComponent<LevelGeneration>().GetLevelInfo;
+
         tempLocations = locations;
         StartSpawning();
+
         if (spawn && locations.Count > 0)
         {
             // Choose enemies until there are no more spawn tickets left
@@ -69,7 +75,7 @@ public class EnemySpawner : MonoBehaviour
 
             foreach (GameObject enemyPrefab in enemiesToSpawn)
             {
-                (List < Vector3 > updatedLocations, Vector3 spawnPosition) = GetRandomSpawnPosition(locations, playerPos);
+                (List<Vector3> updatedLocations, Vector3 spawnPosition) = GetRandomSpawnPosition(locations, playerPos);
 
                 if (spawnPosition != Vector3.zero)
                 {
@@ -145,12 +151,12 @@ public class EnemySpawner : MonoBehaviour
         adjacentPositions.Add(pos + Vector3.left);
         adjacentPositions.Add(pos + Vector3.right);
 
-        foreach(Vector3 adjPos in adjacentPositions) 
+        foreach (Vector3 adjPos in adjacentPositions)
         {
             if (locations.Contains(adjPos))
             {
                 // At least one adjacent position found
-                return true; 
+                return true;
             }
         }
         return false;
@@ -159,5 +165,22 @@ public class EnemySpawner : MonoBehaviour
     private void SpawnEnemy(GameObject enemyPrefab, Vector3 position)
     {
         Instantiate(enemyPrefab, position, Quaternion.identity);
+        enemyCounter++;
+    }
+
+    private void HandleEnemyDied(Vector3 pos)
+    {
+        Debug.Log("Enemy Count before enemy died:  " + enemyCounter);
+        // check if all enemies are dead
+        enemyCounter--;
+
+        Debug.Log("Enemy Count after enemy died:  " + enemyCounter);
+
+        if (enemyCounter <= 0)
+        {
+            // instantiate key so player can move on to next level
+            Instantiate(_keyPrefab, pos, Quaternion.identity);
+        }
+
     }
 }
