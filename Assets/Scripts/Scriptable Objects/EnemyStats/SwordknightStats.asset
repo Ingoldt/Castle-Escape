@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: SwordknightStats
   m_EditorClassIdentifier: 
   spawnCost: 3
-  health: 100
+  health: 1
   damage: 15
   speed: 3

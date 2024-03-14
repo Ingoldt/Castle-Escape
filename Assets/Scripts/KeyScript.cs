@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,23 +8,24 @@ public class KeyScript : MonoBehaviour
     private GameObject _player;
     private bool isFollowing = false;
 
+    public static event Action OnPlayerHasKey;
     public Vector3 offset;
     public float dampingFactor = 4;
+
+    private void OnEnable()
+    {
+        ChangeSprite.OnKeyUse += HandleKeyUsed;
+    }
+
+    private void OnDisable()
+    {
+        ChangeSprite.OnKeyUse -= HandleKeyUsed;
+    }
 
     private void Start()
     {
         // Get the player instance from the PlayerManager
         _player = GameController.instance.playerManagerScript.GetPlayerInstance();
-
-        if (_player != null)
-        {
-            // Associate the key with the player
-            SetPlayer(_player);
-        }
-        else
-        {
-            Debug.LogError("Player instance is not set!");
-        }
     }
 
     private void Update()
@@ -36,21 +38,25 @@ public class KeyScript : MonoBehaviour
         }
     }
 
-    // Method to associate the key with the player
-    private void SetPlayer(GameObject player)
-    {
-
-    }
-
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.CompareTag("Player"))
         {
             // Start following the player
+            GameController.instance.playerManagerScript.SetPlayerHasKey(true);
             isFollowing = true;
 
             // Disable the key's collider so it doesn't interfere with the player
             GetComponent<Collider2D>().enabled = false;
+
+            OnPlayerHasKey?.Invoke();
         }
+    }
+
+    private void HandleKeyUsed()
+    {
+        // key was used to open door 
+        GameController.instance.playerManagerScript.SetPlayerHasKey(false);
+        Destroy(gameObject);
     }
 }

@@ -26,6 +26,7 @@ public class GameController : MonoBehaviour
     // Signaling a new level should be generated
     public static event Action<LevelInfoScriptableObject.BaseType> OnGenerateLevel;
     public static event Action<List<Vector3>, Vector3> OnSpawnEnemies;
+    public static event Action OnLevelGenrationCompleted;
 
     private void Awake()
     {
@@ -55,6 +56,11 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         menuMenagerScript = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuMenager>();
+    }
+
+    public TileManager GetTileManager()
+    {
+        return _tileManagerScript;
     }
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -125,6 +131,9 @@ public class GameController : MonoBehaviour
 
             // Disable loading screen
             menuMenagerScript.SetLoadingState(false);
+
+            // enable player enemy interaction
+            OnLevelGenrationCompleted?.Invoke();
         }
         else
         {
@@ -149,7 +158,7 @@ public class GameController : MonoBehaviour
         OnSpawnEnemies?.Invoke(locations, playerPos);
     }
 
-    private List<Vector3> TileMapToWorldPosition(List<Vector2Int> locations)
+    public List<Vector3> TileMapToWorldPosition(List<Vector2Int> locations)
     {
         List<Vector3> worldPositions = new List<Vector3>();
         _tilemapOrigin = _levelGenerationScript.GetTilemapOrigin;

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4123118137757815097}
   - component: {fileID: 3330230247215676130}
   - component: {fileID: 206751343204073915}
+  - component: {fileID: 6578818573863895988}
   m_Layer: 0
   m_Name: Large_4
   m_TagString: Level
@@ -2684,7 +2685,7 @@ Tilemap:
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
-      m_AllTileFlags: 1073741825
+      m_AllTileFlags: 1
   - first: {x: 1, y: -3, z: 0}
     second:
       serializedVersion: 2
@@ -5058,7 +5059,7 @@ Tilemap:
   - first: {x: -12, y: 7, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 2
+      m_TileIndex: 6
       m_TileSpriteIndex: 6
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
@@ -6301,16 +6302,16 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: 940edec8efa18814ea01c8242aba9caf, type: 2}
   - m_RefCount: 418
     m_Data: {fileID: 11400000, guid: cb846b81ad95dcc46a2e3ac24582be29, type: 2}
-  - m_RefCount: 1
-    m_Data: {fileID: 11400000, guid: fbd63ecb87c8fcd488fdfba3676073f1, type: 2}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: acd3ff1ca071ff04bab8a600936949ba, type: 2}
   - m_RefCount: 3
     m_Data: {fileID: 11400000, guid: 9a0e8ab574578d6428290acca73ca51b, type: 2}
   - m_RefCount: 4
     m_Data: {fileID: 11400000, guid: db5fadbccbceff9449ff4adc5a1ea6ef, type: 2}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 11400000, guid: fbd63ecb87c8fcd488fdfba3676073f1, type: 2}
   - m_RefCount: 2
     m_Data: {fileID: 11400000, guid: f38c603244391e64690fde84482adca2, type: 2}
   - m_RefCount: 1
@@ -6360,6 +6361,8 @@ Tilemap:
   m_TileColorArray:
   - m_RefCount: 625
     m_Data: {r: 1, g: 1, b: 1, a: 1}
+  - m_RefCount: 0
+    m_Data: {r: 4.033e-41, g: 4.033e-41, b: 4.033e-41, a: 4.033e-41}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -6494,3 +6497,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelInfo: {fileID: 11400000, guid: dfc641c7f5a8aea44a22464cdad851c8, type: 2}
+--- !u!114 &6578818573863895988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9041309712649938134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd1a064fdaf913341853120b206661b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openDoors:
+  - {fileID: 11400000, guid: f0775509a3b89d44a825a37274a78207, type: 2}
+  - {fileID: 11400000, guid: 9574fc6de93edfa41a4e8c72562136a2, type: 2}
+  - {fileID: 11400000, guid: e4cffb32cb88ec647a0949857bcaf78c, type: 2}
+  - {fileID: 11400000, guid: c59cf202b812cec4cbb9d70230bfb47b, type: 2}

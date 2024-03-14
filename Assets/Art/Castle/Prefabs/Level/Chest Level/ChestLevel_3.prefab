@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2745865342456491909}
   - component: {fileID: 4430358476252541842}
   - component: {fileID: 6405471488949961279}
+  - component: {fileID: 8692987445016184183}
   m_Layer: 0
   m_Name: ChestLevel_3
   m_TagString: Level
@@ -1474,7 +1475,7 @@ Tilemap:
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
-      m_AllTileFlags: 1073741825
+      m_AllTileFlags: 1
   - first: {x: 1, y: 2, z: 0}
     second:
       serializedVersion: 2
@@ -2352,3 +2353,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelInfo: {fileID: 11400000, guid: 94e1090cee6a1c84f9b51d9262257554, type: 2}
+--- !u!114 &8692987445016184183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4530221588862637100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd1a064fdaf913341853120b206661b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openDoors:
+  - {fileID: 11400000, guid: f0775509a3b89d44a825a37274a78207, type: 2}
+  - {fileID: 11400000, guid: 9574fc6de93edfa41a4e8c72562136a2, type: 2}
+  - {fileID: 11400000, guid: e4cffb32cb88ec647a0949857bcaf78c, type: 2}
+  - {fileID: 11400000, guid: c59cf202b812cec4cbb9d70230bfb47b, type: 2}

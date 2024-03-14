@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 436984666373402373}
   - component: {fileID: 4112747669131071927}
   - component: {fileID: 8652493172475649586}
+  - component: {fileID: -1879143137409147410}
   m_Layer: 0
   m_Name: Medium_1
   m_TagString: Level
@@ -3874,3 +3875,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelInfo: {fileID: 11400000, guid: c89a7f019ef766d4a91b0f5055e3b1f9, type: 2}
+--- !u!114 &-1879143137409147410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8111127767775145808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd1a064fdaf913341853120b206661b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openDoors:
+  - {fileID: 11400000, guid: f0775509a3b89d44a825a37274a78207, type: 2}
+  - {fileID: 11400000, guid: 9574fc6de93edfa41a4e8c72562136a2, type: 2}
+  - {fileID: 11400000, guid: e4cffb32cb88ec647a0949857bcaf78c, type: 2}
+  - {fileID: 11400000, guid: c59cf202b812cec4cbb9d70230bfb47b, type: 2}

@@ -344,8 +344,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 679928848d345f64a9f6c77fb080d236, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 4.5
+  m_MovementSmoothing: 0.05
+  _playerStats: {fileID: 0}
+  animator: {fileID: 0}
   rb2D: {fileID: 228203849}
+  moveSpeed: 4.5
 --- !u!50 &228203849
 Rigidbody2D:
   serializedVersion: 4
@@ -409,7 +412,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.875, y: 0.875}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -768,7 +771,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: 0}
   damping: 0.1
-  target: {fileID: 228203847}
+  Target: {fileID: 0}
 --- !u!1001 &538876122
 PrefabInstance:
   m_ObjectHideFlags: 0

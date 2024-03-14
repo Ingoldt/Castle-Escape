@@ -9,6 +9,7 @@ public class PlayerManager : MonoBehaviour
     private GameObject playerPrefab;
     private GameObject _playerInstance;
     private Transform playerTransform;
+    private bool _playerHasKey = false;
 
     public Vector3 playerPosition;
     public Camerafollow cameraScript;
@@ -16,6 +17,15 @@ public class PlayerManager : MonoBehaviour
     public Vector3 GetPlayerPosition()
     {
         return playerPosition;
+    }
+    public bool GetPlayerHasKey()
+    {
+        return _playerHasKey;
+    }
+
+    public void SetPlayerHasKey(bool value)
+    {
+        _playerHasKey = value;
     }
 
     public GameObject GetPlayerInstance()
