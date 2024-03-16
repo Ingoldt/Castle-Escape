@@ -8,5 +8,11 @@ public class PlayerScriptableObject : ScriptableObject
     public float movementSpeed;
     public float attackSpeed;
     public float meleeRange;
+    public bool isInvincible = false;
+
+    public void SetInvincible(bool value)
+    {
+        isInvincible = value;
+    }
 }
 

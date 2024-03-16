@@ -3,9 +3,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MenuMenager : MonoBehaviour
+public class MenuManager : MonoBehaviour
 {
-    public static MenuMenager instance = null;
+    public static MenuManager instance = null;
     public GameController gameControllerScript;
     public GameObject eventSystemPrefab;
     public GameObject mainMenuPrefab;
@@ -22,6 +22,7 @@ public class MenuMenager : MonoBehaviour
     private GameObject _pauseMenuInstance;
     private GameObject _EndScreenInstance;
 
+    private bool _isPauseMenuActive = false;
     private string _currentScene = "";
 
     private void Awake()
@@ -89,20 +90,28 @@ public class MenuMenager : MonoBehaviour
     {
         string _nextScene = "";
 
-        switch (_currentScene)
+        if (_isPauseMenuActive)
         {
-            case ("MainMenuScene"):
-                _nextScene = "LevelScene";
-                break;
-            case ("LevelScene"):
-                _nextScene = "NextLevelScene";
-                break;
-            default:
-                _nextScene = "MainMenuScene";
-                break;
+            // If pause menu is active, return to main menu
+            _nextScene = "MainMenuScene";
+        }
+        else
+        {
+            // Otherwise, determine the next scene based on the current scene
+            switch (_currentScene)
+            {
+                case "MainMenuScene":
+                    _nextScene = "LevelScene";
+                    break;
+                case "LevelScene":
+                    _nextScene = "NextLevelScene";
+                    break;
+                case "NextLevelScene":
+                    _nextScene = "LevelScene";
+                    break;
+            }
         }
 
-        //depending of current scene
         StartCoroutine(LoadSceneAsync(_nextScene));
     }
 
@@ -110,7 +119,6 @@ public class MenuMenager : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(_nextScene);
 
-        // Check if the loading screen should be displayed
         _loadingScreenInstance.SetActive(true);
 
         while (_isLoading)
@@ -142,11 +150,13 @@ public class MenuMenager : MonoBehaviour
         {
             // Pause menu not instantiated, instantiate it
             _pauseMenuInstance = Instantiate(pauseMenuPrefab);
+            _isPauseMenuActive = true;
         }
         else
         {
             // Pause menu already instantiated, toggle its active state
             _pauseMenuInstance.SetActive(!_pauseMenuInstance.activeSelf);
+            _isPauseMenuActive = !_pauseMenuInstance.activeSelf;
         }
     }
 }

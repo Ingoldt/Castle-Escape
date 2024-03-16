@@ -6,15 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    private MenuMenager _menuManager;
-
-    [Header("Scenes to Load")]
-    [SerializeField]
-    private string _nextScene = "";
+    private MenuManager _menuManager;
 
     private void Start()
     {
-        _menuManager = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuMenager>();
+        _menuManager = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuManager>();
     }
 
     public void PlayGame()
@@ -27,8 +23,9 @@ public class MainMenu : MonoBehaviour
     {
         // Re-enable the main menu objects when returning to the main menu
         // load scene
-        SceneManager.LoadScene(_nextScene);
-     
+        _menuManager.SetLoadingState(true);
+        _menuManager.LoadNextScene();
+
     }
 
     public void QuitGame()

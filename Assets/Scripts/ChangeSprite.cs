@@ -10,7 +10,6 @@ public class ChangeSprite : MonoBehaviour
     private List<TileBase> _barrelTiles;
     private List<TileBase> _floorTiles;
     private Tilemap _tilemap;
-    private bool _playerHasKey = false;
     private List<Vector3> _doorPos = new List<Vector3>();
     private TileBase _doorTile = null;
     // Map to store current health for each barrel position
@@ -30,7 +29,7 @@ public class ChangeSprite : MonoBehaviour
     private void OnDisable()
     {
         KeyScript.OnPlayerHasKey -= HandlePlayerHasKey;
-        GameController.OnLevelGenrationCompleted += HandleLevelGenerated;
+        GameController.OnLevelGenrationCompleted -= HandleLevelGenerated;
     }
 
     void Start()
@@ -40,7 +39,7 @@ public class ChangeSprite : MonoBehaviour
 
     void Update()
     {
-        if (_playerHasKey)
+        if (GameController.instance.playerManagerScript.GetPlayerHasKey())
         {
             Vector3 playerPos = GameController.instance.playerManagerScript.GetPlayerPosition();
 
@@ -53,7 +52,6 @@ public class ChangeSprite : MonoBehaviour
                 {
                     if (_doorTile != null)
                     {
-                        Debug.Log(_doorTile);
                         switch (_doorTile.name)
                         {
                             case "Door_Closed_1":
@@ -75,6 +73,8 @@ public class ChangeSprite : MonoBehaviour
 
                         // invoke event stat key is used 
                         OnKeyUse?.Invoke();
+                        // Reset _playerHasKey to false
+                        GameController.instance.playerManagerScript.SetPlayerHasKey(false);
                     }
                 }
             }
@@ -115,7 +115,7 @@ public class ChangeSprite : MonoBehaviour
             else
             {
 
-                Debug.LogWarning("Pos: " + tilePosition + ", Tile: " + tile);
+                //Debug.LogWarning("Pos: " + tilePosition + ", Tile: " + tile);
             }
         }
     }
@@ -123,7 +123,7 @@ public class ChangeSprite : MonoBehaviour
     private void HandlePlayerHasKey()
     {
         Debug.Log("Player has optained the key");
-        _playerHasKey = true;
+        GameController.instance.playerManagerScript.SetPlayerHasKey(true);
     }
 
     public void BarrelTakeDamage(int damage, Vector3Int tilePosition, string tileName)
@@ -134,7 +134,6 @@ public class ChangeSprite : MonoBehaviour
 
             if (barrelHealthMap[tilePosition] <= 0)
             {
-                Debug.Log(tileName);
                 switch (tileName)
                 {
                     case "Barrel_1":

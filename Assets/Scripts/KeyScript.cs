@@ -56,7 +56,6 @@ public class KeyScript : MonoBehaviour
     private void HandleKeyUsed()
     {
         // key was used to open door 
-        GameController.instance.playerManagerScript.SetPlayerHasKey(false);
         Destroy(gameObject);
     }
 }

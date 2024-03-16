@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.InputSystem;
 
 public class PlayerCombat : MonoBehaviour
 {
+    [SerializeField] private PlayerScriptableObject _playerStats;
     public Animator animator;
-    [SerializeField]
-    private PlayerScriptableObject _playerStats;
-    private float nexAttackTime;
 
+    [Header("Attacking")]
+    private float nexAttackTime;
     public Transform attackPoint;
     public LayerMask enemyLayer;
+
+    [Header("Player Stats")]
     public float attackSpeed;
     public float meleeRange;
     public float maxHealth;
@@ -31,26 +31,22 @@ public class PlayerCombat : MonoBehaviour
         maxHealth = _playerStats.health;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnAttack(InputAction.CallbackContext ctxt)
     {
-
-        if (Time.time >= nexAttackTime) 
+        // Check if it's time for the next attack
+        if (Time.time >= nexAttackTime)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Attack();
-                nexAttackTime = Time.time + 1f / attackSpeed;
-            }
+            Attack();
+            nexAttackTime = Time.time + 1f / attackSpeed;
         }
     }
 
     void Attack()
     {
-        // player attack animation
+        // Player attack animation
         animator.SetTrigger("Attack");
 
-        // Detect all enemies and _barrelTiles in attack range
+        // Detect all enemies and objects in attack range
         Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackPoint.position, meleeRange);
 
         // Damage Enemies and Barrels
@@ -63,7 +59,6 @@ public class PlayerCombat : MonoBehaviour
             {
                 hitObject.GetComponent<EnemyScript>().TakeDamage(damage);
             }
-
             else
             {
                 // Check if the collided object is a barrel
@@ -87,31 +82,6 @@ public class PlayerCombat : MonoBehaviour
             }
         }
     }
-
-    /*
-    void Attack()
-    {
-        // player attack animation
-        animator.SetTrigger("Attack");
-
-        // detect all enemies in attack range
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, meleeRange, enemyLayer);
-
-        // Damage Enemies
-        foreach (Collider2D enemy in hitEnemies)
-        {
-            enemy.GetComponent<EnemyScript>().TakeDamage(damage);
-        }
-
-        // Damage Barrels
-        // Damage Barrels
-        Collider2D[] hitBarrels = Physics2D.OverlapCircleAll(attackPoint.position, meleeRange);
-        foreach (Collider2D barrel in hitBarrels)
-        {
-
-        }
-    }
-    */
 
     /*
     void OnDrawGizmosSelected()

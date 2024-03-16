@@ -62,14 +62,26 @@ public class PlayerManager : MonoBehaviour
 
     public GameObject SpawnPlayer(Vector3 spawnPosition)
     {
-        // Instantiate player at the specified spawn position
-        _playerInstance = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+        if (_playerInstance == null)
+        {
+            // Instantiate player at the specified spawn position
+            _playerInstance = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
 
-        playerPosition = spawnPosition;
-        // Get the Transform component from the spawned player
-        playerTransform = _playerInstance.GetComponent<Transform>();
+            playerPosition = spawnPosition;
+            // Get the Transform component from the spawned player
+            playerTransform = _playerInstance.GetComponent<Transform>();
 
-        cameraScript.SetTarget(playerTransform);
+            cameraScript.SetTarget(playerTransform);
+
+            DontDestroyOnLoad(_playerInstance);
+        }
+        else
+        {
+            // Update the player position variable
+            playerTransform.position = spawnPosition;
+            playerTransform = _playerInstance.GetComponent<Transform>();
+            cameraScript.SetTarget(playerTransform);
+        }
 
         return _playerInstance;
     }

@@ -24,6 +24,7 @@ public class EnemySpawner : MonoBehaviour
     private void OnDisable()
     {
         GameController.OnSpawnEnemies -= HandleSpawnEnemies;
+        EnemyScript.OnEnemyDeath -= HandleEnemyDied;
     }
     public void StartSpawning()
     {

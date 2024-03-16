@@ -52,6 +52,8 @@ public class LevelGeneratorAgent : Agent
 
     private void Awake()
     {
+        Debug.Log("AGent Genrate level bool: " + generateNewLevel);
+
         // Access the LevelGeneration and TileManager components on the same GameObject
         _levelGeneration = GetComponent<LevelGeneration>();
         _tileManager = GetComponent<TileManager>();
@@ -100,7 +102,7 @@ public class LevelGeneratorAgent : Agent
     }
 
     public override void CollectObservations(VectorSensor sensor)
-    {      
+    {
         previousState = _levelGeneration.GetPreviousState;
         currentState = _levelGeneration.GetCurrentState;
 
@@ -498,8 +500,4 @@ public class LevelGeneratorAgent : Agent
 
         return reward + TileMatchingReward;
     }
-
-    //reward tuneing for certain tiles
-
-
 }

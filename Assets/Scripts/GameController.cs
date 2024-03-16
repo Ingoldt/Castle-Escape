@@ -1,4 +1,3 @@
-using Google.Protobuf.Reflection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,10 +17,15 @@ public class GameController : MonoBehaviour
     public GameObject mediumAgentPrefab;
     public GameObject largeAgentPrefab;
     public PlayerManager playerManagerScript;
-    public MenuMenager menuMenagerScript;
+    public MenuManager menuMenagerScript;
     public static GameController instance = null;
 
     public bool shouldGenerateLevel;
+
+    [Header("Game Data")]
+    public int completedLevels;
+
+
 
     // Signaling a new level should be generated
     public static event Action<LevelInfoScriptableObject.BaseType> OnGenerateLevel;
@@ -44,6 +48,7 @@ public class GameController : MonoBehaviour
     {
         LevelGeneratorAgent.OnLevelGenerated += HandleLevelGenerated;
         SceneManager.sceneLoaded += HandleSceneLoaded;
+        ChangeSprite.OnKeyUse += HandleKeyUsed;
     }
 
     // Unsubscribing from the LevelGenerated event
@@ -51,11 +56,12 @@ public class GameController : MonoBehaviour
     {
         LevelGeneratorAgent.OnLevelGenerated -= HandleLevelGenerated;
         SceneManager.sceneLoaded -= HandleSceneLoaded;
+        ChangeSprite.OnKeyUse += HandleKeyUsed;
     }
 
     private void Start()
     {
-        menuMenagerScript = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuMenager>();
+        menuMenagerScript = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuManager>();
     }
 
     public TileManager GetTileManager()
@@ -76,12 +82,13 @@ public class GameController : MonoBehaviour
     private void initializeLevel()
     {
         /// Logic to vary level sizes depending of how many levels the player completed
-        LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Large;
+        //LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Large;
         //LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Medium;
-        //LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Small;
+        LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Small;
 
         // instanciate agent according to the baseType
         GameObject agentPrefab = null;
+        _agent = null;
         switch (desiredBaseType)
         {
             case LevelInfoScriptableObject.BaseType.Small:
@@ -98,11 +105,20 @@ public class GameController : MonoBehaviour
                 return;
         }
 
-        _agent = Instantiate(agentPrefab);
-        UpdateShouldGenerateLevel();
+        if (_agent == null)
+        {
+            _agent = Instantiate(agentPrefab);
+            LevelGeneratorAgent.ShouldGenerateNewLevel = true;
+        }
+        else
+        {
+            Debug.LogWarning("There is allready a agent in the scene");
+        }
 
         _levelGenerationScript = _agent.GetComponent<LevelGeneration>();
         _tileManagerScript = _agent.GetComponent<TileManager>();
+
+        UpdateShouldGenerateLevel();
 
         Debug.Log("GAME CONTROLLER: shouldGenerateLevel " + shouldGenerateLevel);
 
@@ -169,6 +185,26 @@ public class GameController : MonoBehaviour
         }
 
         return worldPositions;
+    }
+
+
+    private void HandleKeyUsed()
+    {
+        Debug.Log("Key was used" + completedLevels);
+        // track game specific information (e.g completed levels...)
+        completedLevels += 1;
+
+        StartCoroutine(DelayedLoadNextScene());
+    }
+
+    private IEnumerator DelayedLoadNextScene()
+    {
+        // Wait for 2 seconds
+        yield return new WaitForSeconds(1f);
+
+        // Load the next scene here
+        menuMenagerScript.SetLoadingState(true);
+        menuMenagerScript.LoadNextScene();
     }
 
     private void UpdateShouldGenerateLevel()

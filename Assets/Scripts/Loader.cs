@@ -5,14 +5,14 @@ using UnityEngine;
 public class Loader : MonoBehaviour
 {
     public GameObject gameControllerPrefab;
-    public GameObject menuMenagerPrefab;
+    public GameObject menuManagerPrefab;
 
 
     // Used for initialization
     void Awake()
     {
         EnsureSingleInstance(gameControllerPrefab);
-        EnsureSingleInstance(menuMenagerPrefab);
+        EnsureSingleInstance(menuManagerPrefab);
     }
 
     private void EnsureSingleInstance(GameObject prefab)
