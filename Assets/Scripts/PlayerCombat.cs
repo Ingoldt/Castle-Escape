@@ -6,6 +6,7 @@ public class PlayerCombat : MonoBehaviour
 {
     [SerializeField] private PlayerScriptableObject _playerStats;
     public Animator animator;
+    public PlayerUI playerUI;
 
     [Header("Attacking")]
     private float nexAttackTime;
@@ -16,10 +17,14 @@ public class PlayerCombat : MonoBehaviour
     public float attackSpeed;
     public float meleeRange;
     public float maxHealth;
+    public float currentHealth;
     public int damage;
 
-    private void Awake()
+    private void Start()
     {
+        // get playerui element from ui manager
+        playerUI = GameController.instance.menuMenagerScript.GetPlayerUIInstance().GetComponentInChildren<PlayerUI>();
+
         if (_playerStats == null)
         {
             Debug.LogWarning("PlayerScriptableObject not assigned to player prefab.");
@@ -29,6 +34,8 @@ public class PlayerCombat : MonoBehaviour
         attackSpeed = _playerStats.attackSpeed;
         damage = _playerStats.damage;
         maxHealth = _playerStats.health;
+        currentHealth = maxHealth;
+        playerUI.SetMaxHealth(maxHealth);
     }
 
     public void OnAttack(InputAction.CallbackContext ctxt)
@@ -81,6 +88,12 @@ public class PlayerCombat : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+        playerUI.SetHealth(currentHealth);
     }
 
     /*

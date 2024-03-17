@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameControllerScript: {fileID: 8580874538973338474, guid: 78329a0d951edd44d8c1f2e63efcf790, type: 3}
   eventSystemPrefab: {fileID: 4429965153606541393, guid: c7dcba0d53715904db30959e228e934b, type: 3}
+  playerUIPrefab: {fileID: 7486360620237917244, guid: 89b873b9b4f37ee4db9891f89e1fa690, type: 3}
   mainMenuPrefab: {fileID: 7404773022157945835, guid: 275f654ccda935f4f84cdddef92585fc, type: 3}
   pauseMenuPrefab: {fileID: 405158105556775553, guid: a8e20d2c9905707419be0daa1e894518, type: 3}
   endScreenPrefab: {fileID: 1102451010288120110, guid: ea461e692a8b6224695891aa85c3edc0, type: 3}

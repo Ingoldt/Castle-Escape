@@ -10,7 +10,7 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
-        _menuManager = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuManager>();
+        _menuManager = GameController.instance.menuMenagerScript;
     }
 
     public void PlayGame()
@@ -21,8 +21,8 @@ public class MainMenu : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
-        // Re-enable the main menu objects when returning to the main menu
-        // load scene
+        // make everything destroyable that is DontDestroyOnLoad
+
         _menuManager.SetLoadingState(true);
         _menuManager.LoadNextScene();
 

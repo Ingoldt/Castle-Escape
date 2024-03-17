@@ -6492,7 +6492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3115f3e0c7d7974b87001f9ef0adfb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelInfo: {fileID: 11400000, guid: d68c31bc3ea58824a9a536991fe95b63, type: 2}
+  levelInfo: {fileID: 11400000, guid: 295bee4ede1df6649b776e029ef35a2f, type: 2}
 --- !u!114 &9083307450193818460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6510,3 +6510,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9574fc6de93edfa41a4e8c72562136a2, type: 2}
   - {fileID: 11400000, guid: e4cffb32cb88ec647a0949857bcaf78c, type: 2}
   - {fileID: 11400000, guid: c59cf202b812cec4cbb9d70230bfb47b, type: 2}
+  maxBarrelHealth: 15

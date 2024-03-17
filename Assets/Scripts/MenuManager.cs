@@ -8,6 +8,7 @@ public class MenuManager : MonoBehaviour
     public static MenuManager instance = null;
     public GameController gameControllerScript;
     public GameObject eventSystemPrefab;
+    public GameObject playerUIPrefab;
     public GameObject mainMenuPrefab;
     public GameObject pauseMenuPrefab;
     public GameObject endScreenPrefab;
@@ -21,10 +22,14 @@ public class MenuManager : MonoBehaviour
     private GameObject _mainMenuInstance;
     private GameObject _pauseMenuInstance;
     private GameObject _EndScreenInstance;
+    private GameObject _playerUIInstance;
 
     private bool _isPauseMenuActive = false;
     private string _currentScene = "";
-
+    public GameObject GetPlayerUIInstance()
+    {
+        return _playerUIInstance;
+    }
     private void Awake()
     {
         if (instance == null) { instance = this; }
@@ -36,12 +41,19 @@ public class MenuManager : MonoBehaviour
 
         // instanciate loading screen
 
-        if(loadingScreenPrefab != null && _loadingScreenInstance == null)
+        if (loadingScreenPrefab != null && _loadingScreenInstance == null)
         {
             _loadingScreenInstance = Instantiate(loadingScreenPrefab);
             Transform loadScreenTransform = _loadingScreenInstance.transform.Find("LoadScreen");
             loadingText = loadScreenTransform.GetComponentInChildren<TextMeshProUGUI>();
             DontDestroyOnLoad(_loadingScreenInstance);
+        }
+
+        // Instantiate player UI
+        if (playerUIPrefab != null && _playerUIInstance == null)
+        {
+            _playerUIInstance = Instantiate(playerUIPrefab);
+            DontDestroyOnLoad(_playerUIInstance);
         }
     }
 
@@ -119,6 +131,10 @@ public class MenuManager : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(_nextScene);
 
+        // disable playerUI
+        TogglePlayerUI(false);
+
+        // enable loading screen
         _loadingScreenInstance.SetActive(true);
 
         while (_isLoading)
@@ -132,6 +148,12 @@ public class MenuManager : MonoBehaviour
         }
         // Hide the loading screen after the loop
         _loadingScreenInstance.SetActive(false);
+
+        // enable playUI
+        if (_nextScene != "MainMenuScene")
+        {
+            TogglePlayerUI(true);
+        }
     }
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -142,6 +164,16 @@ public class MenuManager : MonoBehaviour
             _mainMenuInstance = Instantiate(mainMenuPrefab);
             //_mainMenuInstance.transform.SetParent(transform);
         }
+    }
+
+    private void TogglePlayerUI(bool enable)
+    {
+        if (_playerUIInstance == null)
+        {
+            Debug.LogError("Player UI instance is not instantiated.");
+            return;
+        }
+        _playerUIInstance.SetActive(enable);
     }
 
     private void TogglePauseMenu()

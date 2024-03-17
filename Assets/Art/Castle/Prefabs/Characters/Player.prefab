@@ -169,14 +169,15 @@ MonoBehaviour:
   m_MovementSmoothing: 0.05
   animator: {fileID: 5327011085014659843}
   rb2D: {fileID: 5517612625267707422}
+  playerUI: {fileID: 0}
   trailRenderer: {fileID: 0}
   _playerStats: {fileID: 11400000, guid: 5e258665abab6344d9f1d032d67d6e57, type: 2}
   moveSpeed: 4.5
   isInvincible: 0
-  dashDeceleration: 1
-  _dashingVelocity: 100
-  _dashDuration: 0
-  _dashCooldown: 5
+  cooldown:
+    cooldownTime: 5
+  dashingVelocity: 45
+  dashDuration: 0.4
 --- !u!114 &-4133388997016193438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,6 +192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerStats: {fileID: 11400000, guid: 5e258665abab6344d9f1d032d67d6e57, type: 2}
   animator: {fileID: 5327011085014659843}
+  playerUI: {fileID: 0}
   attackPoint: {fileID: 6669599707646040363}
   enemyLayer:
     serializedVersion: 2
@@ -198,6 +200,7 @@ MonoBehaviour:
   attackSpeed: 0
   meleeRange: 0
   maxHealth: 0
+  currentHealth: 0
   damage: 0
 --- !u!95 &5327011085014659843
 Animator:

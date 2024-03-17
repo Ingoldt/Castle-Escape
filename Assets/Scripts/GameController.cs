@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +14,7 @@ public class GameController : MonoBehaviour
     private Vector3Int _tilemapOrigin;
     private string _currentScene = "";
 
+    [Header("Script Reverences")]
     public GameObject smallAgentPrefab;
     public GameObject mediumAgentPrefab;
     public GameObject largeAgentPrefab;
@@ -24,13 +26,33 @@ public class GameController : MonoBehaviour
 
     [Header("Game Data")]
     public int completedLevels;
+    public float smallLevelBaseChance = 0.5f;
+    public float mediumLevelBaseChance = 0.3f;
+    public float largeLevelBaseChance = 0.15f;
+    public float chestLevelBaseChance = 0.05f;
+
+    private bool? _lastLevelWasChest = null;
+    private float _smallLevelChance;
+    private float _mediumLevelChance;
+    private float _largeLevelChance;
+    private float _chestLevelChance;
+    private float _smallLevelChanceMin;
+    private float _smallLevelChanceMax;
+    private float _mediumLevelChanceMin;
+    private float _mediumLevelChanceMax;
+    private float _largeLevelChanceMin;
+    private float _largeLevelChanceMax;
 
 
-
+    // EVENTS
     // Signaling a new level should be generated
     public static event Action<LevelInfoScriptableObject.BaseType> OnGenerateLevel;
     public static event Action<List<Vector3>, Vector3> OnSpawnEnemies;
     public static event Action OnLevelGenrationCompleted;
+    public TileManager GetTileManager()
+    {
+        return _tileManagerScript;
+    }
 
     private void Awake()
     {
@@ -62,11 +84,13 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         menuMenagerScript = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuManager>();
-    }
 
-    public TileManager GetTileManager()
-    {
-        return _tileManagerScript;
+        // Initialize chances based on base chances
+        _smallLevelChance = smallLevelBaseChance;
+        _mediumLevelChance = mediumLevelBaseChance;
+        _largeLevelChance = largeLevelBaseChance;
+        _chestLevelChance = chestLevelBaseChance;
+
     }
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -81,10 +105,15 @@ public class GameController : MonoBehaviour
 
     private void initializeLevel()
     {
-        /// Logic to vary level sizes depending of how many levels the player completed
-        //LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Large;
-        //LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Medium;
+        // Calculate the desired base type based on probabilities
+        //LevelInfoScriptableObject.BaseType desiredBaseType = CalculateDesiredBaseType();
+
+        // Adjust level probabilities
+        //AdjustLevelProbabilities();
+
         LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Small;
+        // LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Medium;
+        // LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Large;
 
         // instanciate agent according to the baseType
         GameObject agentPrefab = null;
@@ -101,7 +130,7 @@ public class GameController : MonoBehaviour
                 agentPrefab = largeAgentPrefab;
                 break;
             default:
-                Debug.LogError("Unsupported BaseType");
+                Debug.LogError("Unsupported BaseType" + desiredBaseType);
                 return;
         }
 
@@ -187,7 +216,6 @@ public class GameController : MonoBehaviour
         return worldPositions;
     }
 
-
     private void HandleKeyUsed()
     {
         Debug.Log("Key was used" + completedLevels);
@@ -207,8 +235,108 @@ public class GameController : MonoBehaviour
         menuMenagerScript.LoadNextScene();
     }
 
+    // Method to adjust chances based on completed levels
+    private void AdjustLevelProbabilities()
+    {
+        float levelMultiplier = CalculateLevelMultiplier(completedLevels);
+        float increaseFactor = Mathf.Abs(levelMultiplier != 0 ? levelMultiplier / 3f : 1f);
+
+        // Decrease Small Level Chance to min of 0.15 over time
+        _smallLevelChanceMin = 0;
+        _smallLevelChanceMax = Mathf.Max(smallLevelBaseChance - (smallLevelBaseChance * levelMultiplier), 0.15f);
+        // Calculate new small level chance
+        _smallLevelChance = Mathf.Clamp(smallLevelBaseChance - (smallLevelBaseChance * levelMultiplier), _smallLevelChanceMin, _smallLevelChanceMax);
+
+        _mediumLevelChanceMin = _smallLevelChanceMax + Mathf.Epsilon;
+        _mediumLevelChanceMax = Mathf.Min(_mediumLevelChanceMin + (mediumLevelBaseChance * increaseFactor), _mediumLevelChanceMin + 0.45f);
+        // Calculate new medium level chance
+        _mediumLevelChance = Mathf.Clamp(_mediumLevelChance + (mediumLevelBaseChance * increaseFactor), _mediumLevelChanceMin, _mediumLevelChanceMax + Mathf.Epsilon);
+
+        _largeLevelChanceMin = _mediumLevelChanceMax + Mathf.Epsilon;
+        _largeLevelChanceMax = Mathf.Min(_largeLevelChanceMin + (largeLevelBaseChance * increaseFactor), _largeLevelChanceMin + 0.35f);
+        // Calculate new large level chance
+        _largeLevelChance = Mathf.Clamp(_largeLevelChance + (largeLevelBaseChance * increaseFactor), _largeLevelChanceMin, _largeLevelChanceMax);
+
+        // Adjust cumulative chances for chest 
+        if (_lastLevelWasChest == false || _lastLevelWasChest == null)
+        {
+            // Calculate remaining probability after subtracting the chances of other level types
+            float remainingProbability = Mathf.Abs(1.0f - (_smallLevelChance + (1.0f - _mediumLevelChance) + (1.0f - _largeLevelChance)));
+
+
+            // Increase the chest level chance by 0.05 each time it triggers, up to a maximum of 0.2
+            _chestLevelChance = Mathf.Clamp(_chestLevelChance + 0.05f, chestLevelBaseChance, Mathf.Min(chestLevelBaseChance + 0.2f, chestLevelBaseChance + remainingProbability));
+        }
+        else
+        {
+            // Reset to base chance
+            _chestLevelChance = chestLevelBaseChance;
+        }
+
+        // Log the adjusted probabilities
+        Debug.Log("Small Level Chance: " + _smallLevelChance);
+        Debug.Log("Medium Level Chance: " + _mediumLevelChance);
+        Debug.Log("Large Level Chance: " + _largeLevelChance);
+        Debug.Log("Chest Level Chance: " + _chestLevelChance);
+    }
+
+    // Method to calculate the level multiplier based on completed levels
+    private float CalculateLevelMultiplier(int completedLevels)
+    {
+        // Decrease factor
+        return 1.0f - Mathf.Pow(0.1f, completedLevels);
+    }
+
+    LevelInfoScriptableObject.BaseType CalculateDesiredBaseType()
+    {
+        if(completedLevels != 0 && completedLevels % 10 == 0)
+        {
+            // Return the Boss basetype
+            return LevelInfoScriptableObject.BaseType.Boss;
+        }
+
+
+        // Calculate total probability
+        float totalProbability = _smallLevelChance + _mediumLevelChance + _largeLevelChance + _chestLevelChance;
+
+        // Generate a random value between 0 and totalProbability
+        float randomValue = UnityEngine.Random.Range(0f, totalProbability);
+
+        // Create an array to store the cumulative probabilities
+        float[] cumulativeProbabilities = new float[]
+        {
+        _smallLevelChance,
+        _smallLevelChance + _mediumLevelChance,
+        _smallLevelChance + _mediumLevelChance + _largeLevelChance,
+        totalProbability // Chest level
+        };
+
+        // Perform binary search to find the desired base type
+        int left = 0;
+        int right = cumulativeProbabilities.Length - 1;
+
+        while (left <= right)
+        {
+            int mid = left + (right - left) / 2;
+
+            if (randomValue < cumulativeProbabilities[mid])
+            {
+                right = mid - 1;
+            }
+            else
+            {
+                left = mid + 1;
+            }
+        }
+
+        // Return the corresponding base type
+        return (LevelInfoScriptableObject.BaseType)left;
+    }
+
     private void UpdateShouldGenerateLevel()
     {
         shouldGenerateLevel = LevelGeneratorAgent.ShouldGenerateNewLevel;
     }
+
+
 }

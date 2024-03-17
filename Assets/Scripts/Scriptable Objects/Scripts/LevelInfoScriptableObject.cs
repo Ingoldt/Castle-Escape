@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 [System.Serializable]
 public class LevelInfoScriptableObject : ScriptableObject
 {
-    public enum BaseType { Small, Medium, Large }
+    public enum BaseType { Small, Medium, Large, Chest, Boss }
     public enum Variation { V1, V2, V3, V4 }
     public Variation PublicVariation => _variation;
     public BaseType PublicBaseType => _baseType;
@@ -20,7 +20,6 @@ public class LevelInfoScriptableObject : ScriptableObject
     public int height;
     [HideInInspector]
     public int tileCount;
-    [HideInInspector]
     public bool playability = false;
 
     [SerializeField]

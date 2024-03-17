@@ -16,6 +16,6 @@ MonoBehaviour:
   width: 0
   height: 0
   tileCount: 0
-  playability: 0
-  _baseType: 0
-  _variation: 0
+  playability: 1
+  _baseType: 3
+  _variation: 3
