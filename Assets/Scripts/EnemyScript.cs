@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
@@ -8,7 +6,7 @@ public class EnemyScript : MonoBehaviour
     [SerializeField]
     private EnemyScriptableObject _enemyStats;
 
-    public static event Action<Vector3> OnEnemyDeath; // Event to notify the spawner when an enemy dies
+    public static event Action<Vector3> OnEnemyDeath;
 
     public int spawnCost;
     public int maxHealth;

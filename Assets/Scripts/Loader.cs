@@ -7,32 +7,35 @@ public class Loader : MonoBehaviour
     public GameObject gameControllerPrefab;
     public GameObject menuManagerPrefab;
 
-
     // Used for initialization
     void Awake()
     {
-        EnsureSingleInstance(gameControllerPrefab);
-        EnsureSingleInstance(menuManagerPrefab);
-    }
+        // Check if the prefabs already exist in the scene
+        GameObject existingGameController = GameObject.Find(gameControllerPrefab.name + "(Clone)");
+        GameObject existingMenuManager = GameObject.Find(menuManagerPrefab.name + "(Clone)");
 
-    private void EnsureSingleInstance(GameObject prefab)
-    {
-        if (prefab != null)
+        // If both prefabs exist, we don't need to instantiate new ones
+        if (existingGameController != null && existingMenuManager != null)
         {
-            GameObject existingInstance = GameObject.Find(prefab.name + "(Clone)");
-            if (existingInstance == null)
+            GameController gameController = existingGameController.GetComponent<GameController>();
+
+            if (gameController != null)
             {
-                Instantiate(prefab);
-            }
-            else
-            {
-                Destroy(gameObject);
+                gameController.Initialize();
             }
         }
         else
         {
-            Debug.LogError("Prefab is not assigned in the Loader script.");
+            // If any of the prefabs don't exist, instantiate them
+            if (existingGameController == null && gameControllerPrefab != null)
+            {
+                Instantiate(gameControllerPrefab);
+            }
+
+            if (existingMenuManager == null && menuManagerPrefab != null)
+            {
+                Instantiate(menuManagerPrefab);
+            }
         }
     }
 }
-

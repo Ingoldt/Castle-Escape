@@ -2370,3 +2370,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9574fc6de93edfa41a4e8c72562136a2, type: 2}
   - {fileID: 11400000, guid: e4cffb32cb88ec647a0949857bcaf78c, type: 2}
   - {fileID: 11400000, guid: c59cf202b812cec4cbb9d70230bfb47b, type: 2}
+  maxBarrelHealth: 10

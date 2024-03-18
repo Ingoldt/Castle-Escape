@@ -104,6 +104,7 @@ public class MenuManager : MonoBehaviour
 
         if (_isPauseMenuActive)
         {
+            _isPauseMenuActive = false;
             // If pause menu is active, return to main menu
             _nextScene = "MainMenuScene";
         }
@@ -176,7 +177,7 @@ public class MenuManager : MonoBehaviour
         _playerUIInstance.SetActive(enable);
     }
 
-    private void TogglePauseMenu()
+    public void TogglePauseMenu()
     {
         if (_pauseMenuInstance == null)
         {

@@ -51,38 +51,28 @@ public class PlayerManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+void Update()
+{
+    if (playerTransform != null)
+        playerPosition = playerTransform.position;
+}
+
+public GameObject SpawnPlayer(Vector3 spawnPosition)
+{
+    if (_playerInstance == null)
     {
-        // Update the player's position in world coordinates
-        if (playerTransform != null)
-        {
-            playerPosition = playerTransform.position;
-        }
+        _playerInstance = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+        DontDestroyOnLoad(_playerInstance);
     }
-
-    public GameObject SpawnPlayer(Vector3 spawnPosition)
+    else
     {
-        if (_playerInstance == null)
-        {
-            // Instantiate player at the specified spawn position
-            _playerInstance = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
-
-            playerPosition = spawnPosition;
-            // Get the Transform component from the spawned player
-            playerTransform = _playerInstance.GetComponent<Transform>();
-
-            cameraScript.SetTarget(playerTransform);
-
-            DontDestroyOnLoad(_playerInstance);
-        }
-        else
-        {
-            // Update the player position variable
-            playerTransform.position = spawnPosition;
-            playerTransform = _playerInstance.GetComponent<Transform>();
-            cameraScript.SetTarget(playerTransform);
-        }
-
-        return _playerInstance;
+        playerTransform.position = spawnPosition;
     }
+    
+    playerPosition = spawnPosition;
+    playerTransform = _playerInstance.transform;
+    cameraScript.SetTarget(playerTransform);
+
+    return _playerInstance;
+}
 }

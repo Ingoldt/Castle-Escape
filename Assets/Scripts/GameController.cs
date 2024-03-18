@@ -83,14 +83,8 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        menuMenagerScript = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuManager>();
-
-        // Initialize chances based on base chances
-        _smallLevelChance = smallLevelBaseChance;
-        _mediumLevelChance = mediumLevelBaseChance;
-        _largeLevelChance = largeLevelBaseChance;
-        _chestLevelChance = chestLevelBaseChance;
-
+        // initialize GameController
+        Initialize();
     }
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -338,5 +332,19 @@ public class GameController : MonoBehaviour
         shouldGenerateLevel = LevelGeneratorAgent.ShouldGenerateNewLevel;
     }
 
+    public void Initialize()
+    {
+        menuMenagerScript = GameObject.FindGameObjectWithTag("MenuManager").GetComponent<MenuManager>();
+        // reset progress
+        completedLevels = 0;
 
+        // Initialize chances based on base chances
+        _smallLevelChance = smallLevelBaseChance;
+        _mediumLevelChance = mediumLevelBaseChance;
+        _largeLevelChance = largeLevelBaseChance;
+        _chestLevelChance = chestLevelBaseChance;
+
+        playerManagerScript.SetPlayerHasKey(false);
+        Destroy(playerManagerScript.GetPlayerInstance());
+    }
 }

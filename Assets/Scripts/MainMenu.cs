@@ -25,7 +25,6 @@ public class MainMenu : MonoBehaviour
 
         _menuManager.SetLoadingState(true);
         _menuManager.LoadNextScene();
-
     }
 
     public void QuitGame()
