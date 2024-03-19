@@ -49,6 +49,6 @@ MonoBehaviour:
   playerUIPrefab: {fileID: 7486360620237917244, guid: 89b873b9b4f37ee4db9891f89e1fa690, type: 3}
   mainMenuPrefab: {fileID: 7404773022157945835, guid: 275f654ccda935f4f84cdddef92585fc, type: 3}
   pauseMenuPrefab: {fileID: 405158105556775553, guid: a8e20d2c9905707419be0daa1e894518, type: 3}
-  endScreenPrefab: {fileID: 1102451010288120110, guid: ea461e692a8b6224695891aa85c3edc0, type: 3}
+  deathScreenPrefab: {fileID: 8076216450369977095, guid: 73d4ce2b456213b47aa17b7135372556, type: 3}
   loadingScreenPrefab: {fileID: 8907640765501846610, guid: a7d6dc49db053cc47a1eeac12d5ae385, type: 3}
   loadingText: {fileID: 0}

@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -38,7 +36,7 @@ public class PlayerController : MonoBehaviour
         moveDir = Vector2.zero;
         isInvincible = _playerStats.isInvincible;
         playerUI.SetMaxStamina(1f);
-
+        playerUI.SetSpeedValue(moveSpeed);
     }
 
     private void Update()
@@ -52,6 +50,12 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+    }
+
+    public void SetMoveSpeed(float value)
+    {
+        moveSpeed += value;
+        playerUI.SetSpeedValue(moveSpeed);
     }
 
     public void OnMove(InputAction.CallbackContext ctxt)

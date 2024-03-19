@@ -1,8 +1,4 @@
-using JetBrains.Rider.Unity.Editor;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -17,6 +13,11 @@ public class MainMenu : MonoBehaviour
     {
         _menuManager.SetLoadingState(true);
         _menuManager.LoadNextScene();
+    }
+
+    public void ResumeGame()
+    {
+        _menuManager.TogglePauseMenu();
     }
 
     public void ReturnToMainMenu()

@@ -123,7 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &1341849481
+--- !u!1001 &938190720
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -131,10 +131,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5807625445293117728, guid: 8d1f4866c1d878e44a29d872fc977f95, type: 3}
-      propertyPath: _enemyPrefabs.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6822053525552781254, guid: 8d1f4866c1d878e44a29d872fc977f95, type: 3}
       propertyPath: m_Name
       value: EnemieSpawner
@@ -297,4 +293,4 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1818373926}
-  - {fileID: 1341849481}
+  - {fileID: 938190720}

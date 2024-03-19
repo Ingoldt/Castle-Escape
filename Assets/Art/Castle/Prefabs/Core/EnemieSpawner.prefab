@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyPrefabs:
   - {fileID: 6974264219131823225, guid: a29929f591b9b9f47a67e0316d9f9fb3, type: 3}
+  - {fileID: 4462730366307815328, guid: a32775b568514fb4c85818311cb3042c, type: 3}
   _keyPrefab: {fileID: 4951268446181412226, guid: f74f0a1911058f24b976a03b26f2df23, type: 3}
-  _levelInfo: {fileID: 0}
   minDist: 5
   spawn: 0

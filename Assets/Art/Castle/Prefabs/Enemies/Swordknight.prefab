@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &924004126216087131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 310568061675890544}
+  m_Layer: 0
+  m_Name: Attackpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &310568061675890544
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924004126216087131}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.028, y: 0.052, z: -0.31167728}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5433906920199979469}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6974264219131823225
 GameObject:
   m_ObjectHideFlags: 0
@@ -13,7 +44,8 @@ GameObject:
   - component: {fileID: 4376866642659768522}
   - component: {fileID: 8011890877160869083}
   - component: {fileID: 5291429569297563220}
-  - component: {fileID: 6109100823671680488}
+  - component: {fileID: 3770811842487576245}
+  - component: {fileID: 3286333663691894767}
   m_Layer: 10
   m_Name: Swordknight
   m_TagString: Enemy
@@ -31,9 +63,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.6, y: 1.6, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 310568061675890544}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7343572190353336631
@@ -100,9 +133,9 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 200
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0.2
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -114,7 +147,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!70 &8011890877160869083
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -147,8 +180,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.008259237, y: -0.025694907}
-  m_Size: {x: 0.68615556, y: 0.77608764}
+  m_Offset: {x: -0.2312355, y: -0.10456848}
+  m_Size: {x: 0.44031525, y: 0.5148926}
   m_Direction: 0
 --- !u!114 &5291429569297563220
 MonoBehaviour:
@@ -162,12 +195,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cbcc5791aad6eb488e00dd748b8f574, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 3286333663691894767}
   _enemyStats: {fileID: 11400000, guid: 814dee3400211e346a5a8b26fb6be565, type: 2}
+  itemPrefabs:
+  - {fileID: 6812868286975200036, guid: 7cda98e7f7ffb324dadd6dcfaf724d40, type: 3}
+  - {fileID: 1243694942710953246, guid: 846fb4264efe0654c96a3d40dd69d0c5, type: 3}
+  - {fileID: 1899004714321782076, guid: 8b54559ae29394845991214faf3e8e81, type: 3}
   spawnCost: 0
   maxHealth: 0
   damage: 0
+  attackSpeed: 0
+  attackRange: 0
   movementSpeed: 0
---- !u!114 &6109100823671680488
+--- !u!114 &3770811842487576245
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,6 +216,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 6974264219131823225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06f960d7b796a204e96cf8361d20728f, type: 3}
+  m_Script: {fileID: 11500000, guid: 5f033f1412cb0c74ba3ebc929a555266, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 3286333663691894767}
+  enemyScript: {fileID: 0}
+  player: {fileID: 0}
+  tilemap: {fileID: 0}
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  playerObstacleLayerLayer:
+    serializedVersion: 2
+    m_Bits: 768
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  attackPoint: {fileID: 310568061675890544}
+  idleDuration: 3
+  wanderRadius: 5
+  movementSpeed: 1
+  steerForce: 0.2
+--- !u!95 &3286333663691894767
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6974264219131823225}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3ec68b5f2f65e7f46bb91009ad7337d8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

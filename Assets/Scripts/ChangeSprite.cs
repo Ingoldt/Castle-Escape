@@ -18,7 +18,7 @@ public class ChangeSprite : MonoBehaviour
     public static event Action OnKeyUse;
 
     public List<TileBase> openDoors;
-    public int maxBarrelHealth = 15;
+    public int maxBarrelHealth = 10;
 
     private void OnEnable()
     {

@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c9d8aede34e9fd40adc49c97466ec3c, type: 3}
   m_Name: SwordknightStats
   m_EditorClassIdentifier: 
+  enemyType: 0
   spawnCost: 3
-  health: 1
-  damage: 15
-  speed: 3
+  health: 20
+  damage: 8
+  attackSpeed: 1
+  attackkRange: 1
+  speed: 2.5

@@ -1,5 +1,6 @@
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,7 +12,7 @@ public class MenuManager : MonoBehaviour
     public GameObject playerUIPrefab;
     public GameObject mainMenuPrefab;
     public GameObject pauseMenuPrefab;
-    public GameObject endScreenPrefab;
+    public GameObject deathScreenPrefab;
     public GameObject loadingScreenPrefab;
     public TextMeshProUGUI loadingText;
 
@@ -21,10 +22,11 @@ public class MenuManager : MonoBehaviour
     private GameObject _eventSystemInstance;
     private GameObject _mainMenuInstance;
     private GameObject _pauseMenuInstance;
-    private GameObject _EndScreenInstance;
+    private GameObject _deathScreenInstance;
     private GameObject _playerUIInstance;
 
     private bool _isPauseMenuActive = false;
+    private bool _isDeathScreenActive = false;
     private string _currentScene = "";
     public GameObject GetPlayerUIInstance()
     {
@@ -104,9 +106,16 @@ public class MenuManager : MonoBehaviour
 
         if (_isPauseMenuActive)
         {
-            _isPauseMenuActive = false;
             // If pause menu is active, return to main menu
             _nextScene = "MainMenuScene";
+            TogglePauseMenu();
+        }
+        else if(_isDeathScreenActive)
+        {
+            // If pause menu is active, return to main menu
+            _nextScene = "MainMenuScene";
+            ToggleDeathScreen();
+
         }
         else
         {
@@ -147,14 +156,15 @@ public class MenuManager : MonoBehaviour
             }
             loadingText.text = "Loading";
         }
-        // Hide the loading screen after the loop
-        _loadingScreenInstance.SetActive(false);
 
-        // enable playUI
+        // enable playerUI
         if (_nextScene != "MainMenuScene")
         {
             TogglePlayerUI(true);
         }
+
+        // Hide the loading screen after the loop
+        _loadingScreenInstance.SetActive(false);
     }
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -163,7 +173,6 @@ public class MenuManager : MonoBehaviour
         if (_currentScene == "MainMenuScene" && _mainMenuInstance == null)
         {
             _mainMenuInstance = Instantiate(mainMenuPrefab);
-            //_mainMenuInstance.transform.SetParent(transform);
         }
     }
 
@@ -171,7 +180,7 @@ public class MenuManager : MonoBehaviour
     {
         if (_playerUIInstance == null)
         {
-            Debug.LogError("Player UI instance is not instantiated.");
+            Instantiate(_playerUIInstance);
             return;
         }
         _playerUIInstance.SetActive(enable);
@@ -184,12 +193,37 @@ public class MenuManager : MonoBehaviour
             // Pause menu not instantiated, instantiate it
             _pauseMenuInstance = Instantiate(pauseMenuPrefab);
             _isPauseMenuActive = true;
+            Time.timeScale = 0;
+            Debug.Log("Pause Menu Instantiated");
         }
         else
         {
             // Pause menu already instantiated, toggle its active state
-            _pauseMenuInstance.SetActive(!_pauseMenuInstance.activeSelf);
-            _isPauseMenuActive = !_pauseMenuInstance.activeSelf;
+            _isPauseMenuActive = !_isPauseMenuActive;
+            _pauseMenuInstance.SetActive(_isPauseMenuActive);
+
+            // Set game state when continuing
+            Time.timeScale = _isPauseMenuActive ? 0 : 1;
+
+            Debug.Log("Pause Menu Toggled");
+        }
+    }
+
+    public void ToggleDeathScreen()
+    {
+        if (_deathScreenInstance == null)
+        {
+            // Instantiate the death screen prefab if it's not instantiated already
+            _deathScreenInstance = Instantiate(deathScreenPrefab);
+            _isDeathScreenActive = true;
+            Time.timeScale = 0;
+        }
+        else
+        {
+            // Toggle the visibility of the death screen
+            _isDeathScreenActive = !_isDeathScreenActive;
+            _deathScreenInstance.SetActive(_isDeathScreenActive);
+            Time.timeScale = _isDeathScreenActive ? 0 : 1;
         }
     }
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4017697373877996843}
   - component: {fileID: 7128897873646326190}
   - component: {fileID: 5517612625267707422}
-  - component: {fileID: 7584182986598566320}
+  - component: {fileID: 1347870786196031845}
   - component: {fileID: 1540410575265572301}
   - component: {fileID: -4133388997016193438}
   - component: {fileID: 5327011085014659843}
@@ -34,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
+  m_LocalScale: {x: 1.8, y: 1.8, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6669599707646040363}
@@ -119,7 +119,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!70 &7584182986598566320
+--- !u!70 &1347870786196031845
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -151,8 +151,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.12932426, y: -0.15631732}
-  m_Size: {x: 0.56928754, y: 0.6624128}
+  m_Offset: {x: -0.16, y: -0.1}
+  m_Size: {x: 0.3, y: 0.4}
   m_Direction: 0
 --- !u!114 &1540410575265572301
 MonoBehaviour:
@@ -479,7 +479,7 @@ Transform:
   m_GameObject: {fileID: 9028789107405171621}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.178, y: 0.175, z: 0.00046676275}
+  m_LocalPosition: {x: 0.012, y: -0.086, z: 0.00046676275}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,8 @@ public class PlayerUI : MonoBehaviour
     public Slider healthSlider;
     public Slider staminaSlider;
     public Slider manaSlider;
+    public GameObject AttackUI;
+    public GameObject SpeedUI;
 
     public void SetMaxHealth(float maxHealth)
     {
@@ -37,5 +40,17 @@ public class PlayerUI : MonoBehaviour
     public void SetMana(float mana)
     {
         manaSlider.value = mana;
+    }
+
+    public void SetAttackValue(int value)
+    {
+        TextMeshProUGUI text = AttackUI.GetComponentInChildren<TextMeshProUGUI>();
+        text.text = value.ToString();
+    }
+
+    public void SetSpeedValue(float value)
+    {
+        TextMeshProUGUI text = SpeedUI.GetComponentInChildren<TextMeshProUGUI>();
+        text.text = value.ToString("F1");
     }
 }

@@ -165,7 +165,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy(GameObject enemyPrefab, Vector3 position)
     {
-        Instantiate(enemyPrefab, position, Quaternion.identity);
+        Instantiate(enemyPrefab, position, Quaternion.identity, transform);
         enemyCounter++;
     }
 

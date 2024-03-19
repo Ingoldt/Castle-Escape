@@ -9,11 +9,12 @@ public class PlayerCombat : MonoBehaviour
     public PlayerUI playerUI;
 
     [Header("Attacking")]
-    private float nexAttackTime;
+    private float nextAttackTime;
     public Transform attackPoint;
     public LayerMask enemyLayer;
 
     [Header("Player Stats")]
+    private bool deathScreenToggled = false;
     public float attackSpeed;
     public float meleeRange;
     public float maxHealth;
@@ -35,16 +36,18 @@ public class PlayerCombat : MonoBehaviour
         damage = _playerStats.damage;
         maxHealth = _playerStats.health;
         currentHealth = maxHealth;
+
         playerUI.SetMaxHealth(maxHealth);
+        playerUI.SetAttackValue(damage);
     }
 
     public void OnAttack(InputAction.CallbackContext ctxt)
     {
         // Check if it's time for the next attack
-        if (Time.time >= nexAttackTime)
+        if (Time.time >= nextAttackTime)
         {
             Attack();
-            nexAttackTime = Time.time + 1f / attackSpeed;
+            nextAttackTime = Time.time + 1f / attackSpeed;
         }
     }
 
@@ -90,11 +93,41 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+    public void SetDamage(int value)
+     {
+        damage += value;
+        playerUI.SetAttackValue(damage);
+    }
+
+    public void SetCurrentHealth(int value)
+    {
+        currentHealth += value;
+        playerUI.SetHealth(currentHealth);
+    }
+
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
         playerUI.SetHealth(currentHealth);
+
+        //play hurt animation
+        animator.SetTrigger("Hurt");
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
     }
+
+    void Die()
+    {
+        if (!deathScreenToggled)
+        {
+            GameController.instance.menuMenagerScript.ToggleDeathScreen();
+            deathScreenToggled = true;
+        }
+    }
+
 
     /*
     void OnDrawGizmosSelected()
@@ -104,7 +137,8 @@ public class PlayerCombat : MonoBehaviour
             Debug.Log("Attack Poit is not assigned to the player");
             return;
         }
-        Gizmos.DrawWireSphere(attackPoint.position, meleeRange);
+        Gizmos.DrawWireSphere(attackPoint.position, 0.6f);
     }
     */
+
 }

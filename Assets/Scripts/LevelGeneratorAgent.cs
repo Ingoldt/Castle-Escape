@@ -185,7 +185,7 @@ public class LevelGeneratorAgent : Agent
     {
         width = _levelGeneration.GetLevelInfo.width;
         height = _levelGeneration.GetLevelInfo.height;
-        //Debug.Log("Level: "+ _levelGenerationScript.GetLevelInfo.name + "height: " + height + "Width: " + width + "Variation: " + _levelGenerationScript.GetLevelInfo.PublicVariation);
+        //Debug.Log("Level: "+ levelGenerationScript.GetLevelInfo.name + "height: " + height + "Width: " + width + "Variation: " + levelGenerationScript.GetLevelInfo.PublicVariation);
         
         
         if (width != 0 && height != 0)
@@ -276,7 +276,7 @@ public class LevelGeneratorAgent : Agent
         float reward = 0f;
 
         /*
-        TileBase tile = _tileManagerScript.GetTileFromID(newTileValue);
+        TileBase tile = tileManagerScript.GetTileFromID(newTileValue);
         Debug.Log("Tile ID: " + newTileValue + " Tile: " + tile);
         Debug.Log("coordinates " + " x " + x + " y " + y);
         */

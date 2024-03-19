@@ -16,4 +16,5 @@ MonoBehaviour:
   damage: 10
   movementSpeed: 4.5
   attackSpeed: 1
-  meleeRange: 0.3
+  meleeRange: 0.65
+  isInvincible: 0

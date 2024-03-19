@@ -8,8 +8,6 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
-    private LevelGeneration _levelGenerationScript;
-    private TileManager _tileManagerScript;
     private GameObject _agent;
     private Vector3Int _tilemapOrigin;
     private string _currentScene = "";
@@ -20,6 +18,8 @@ public class GameController : MonoBehaviour
     public GameObject largeAgentPrefab;
     public PlayerManager playerManagerScript;
     public MenuManager menuMenagerScript;
+    public LevelGeneration levelGenerationScript;
+    public TileManager tileManagerScript;
     public static GameController instance = null;
 
     public bool shouldGenerateLevel;
@@ -51,7 +51,7 @@ public class GameController : MonoBehaviour
     public static event Action OnLevelGenrationCompleted;
     public TileManager GetTileManager()
     {
-        return _tileManagerScript;
+        return tileManagerScript;
     }
 
     private void Awake()
@@ -100,14 +100,11 @@ public class GameController : MonoBehaviour
     private void initializeLevel()
     {
         // Calculate the desired base type based on probabilities
-        //LevelInfoScriptableObject.BaseType desiredBaseType = CalculateDesiredBaseType();
+        LevelInfoScriptableObject.BaseType desiredBaseType = CalculateDesiredBaseType();
 
         // Adjust level probabilities
-        //AdjustLevelProbabilities();
+        AdjustLevelProbabilities();
 
-        LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Small;
-        // LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Medium;
-        // LevelInfoScriptableObject.BaseType desiredBaseType = LevelInfoScriptableObject.BaseType.Large;
 
         // instanciate agent according to the baseType
         GameObject agentPrefab = null;
@@ -138,8 +135,8 @@ public class GameController : MonoBehaviour
             Debug.LogWarning("There is allready a agent in the scene");
         }
 
-        _levelGenerationScript = _agent.GetComponent<LevelGeneration>();
-        _tileManagerScript = _agent.GetComponent<TileManager>();
+        levelGenerationScript = _agent.GetComponent<LevelGeneration>();
+        tileManagerScript = _agent.GetComponent<TileManager>();
 
         UpdateShouldGenerateLevel();
 
@@ -160,12 +157,12 @@ public class GameController : MonoBehaviour
         {
 
             // convert Tilemap positions into World positions
-            List<Vector3> spawnPositions = TileMapToWorldPosition(_tileManagerScript.SpawnLocations);
+            List<Vector3> spawnPositions = TileMapToWorldPosition(tileManagerScript.SpawnLocations);
 
             // spawn player inside the level
             playerManagerScript.SpawnPlayer(spawnPositions[0]);
 
-            List<Vector3> floorPositions = TileMapToWorldPosition(_tileManagerScript.FloorLocations);
+            List<Vector3> floorPositions = TileMapToWorldPosition(tileManagerScript.FloorLocations);
             SpawnEnemies(floorPositions);
 
             // Disable loading screen
@@ -200,13 +197,12 @@ public class GameController : MonoBehaviour
     public List<Vector3> TileMapToWorldPosition(List<Vector2Int> locations)
     {
         List<Vector3> worldPositions = new List<Vector3>();
-        _tilemapOrigin = _levelGenerationScript.GetTilemapOrigin;
+        _tilemapOrigin = levelGenerationScript.GetTilemapOrigin;
 
         foreach (var position in locations)
         {
             worldPositions.Add(new Vector3(_tilemapOrigin.x + 0.5f + position.x, _tilemapOrigin.y + 0.5f + position.y, 0));
         }
-
         return worldPositions;
     }
 
@@ -233,7 +229,7 @@ public class GameController : MonoBehaviour
     private void AdjustLevelProbabilities()
     {
         float levelMultiplier = CalculateLevelMultiplier(completedLevels);
-        float increaseFactor = Mathf.Abs(levelMultiplier != 0 ? levelMultiplier / 3f : 1f);
+        float increaseFactor = Mathf.Abs(levelMultiplier != 0 ? levelMultiplier / 2f : 1f);
 
         // Decrease Small Level Chance to min of 0.15 over time
         _smallLevelChanceMin = 0;
@@ -251,6 +247,8 @@ public class GameController : MonoBehaviour
         // Calculate new large level chance
         _largeLevelChance = Mathf.Clamp(_largeLevelChance + (largeLevelBaseChance * increaseFactor), _largeLevelChanceMin, _largeLevelChanceMax);
 
+        /*
+
         // Adjust cumulative chances for chest 
         if (_lastLevelWasChest == false || _lastLevelWasChest == null)
         {
@@ -267,11 +265,13 @@ public class GameController : MonoBehaviour
             _chestLevelChance = chestLevelBaseChance;
         }
 
+
+        */
+
         // Log the adjusted probabilities
         Debug.Log("Small Level Chance: " + _smallLevelChance);
         Debug.Log("Medium Level Chance: " + _mediumLevelChance);
         Debug.Log("Large Level Chance: " + _largeLevelChance);
-        Debug.Log("Chest Level Chance: " + _chestLevelChance);
     }
 
     // Method to calculate the level multiplier based on completed levels
@@ -283,29 +283,17 @@ public class GameController : MonoBehaviour
 
     LevelInfoScriptableObject.BaseType CalculateDesiredBaseType()
     {
-        if(completedLevels != 0 && completedLevels % 10 == 0)
-        {
-            // Return the Boss basetype
-            return LevelInfoScriptableObject.BaseType.Boss;
-        }
+        float totalProbability = _smallLevelChance + _mediumLevelChance + _largeLevelChance;
 
-
-        // Calculate total probability
-        float totalProbability = _smallLevelChance + _mediumLevelChance + _largeLevelChance + _chestLevelChance;
-
-        // Generate a random value between 0 and totalProbability
         float randomValue = UnityEngine.Random.Range(0f, totalProbability);
 
-        // Create an array to store the cumulative probabilities
         float[] cumulativeProbabilities = new float[]
         {
         _smallLevelChance,
         _smallLevelChance + _mediumLevelChance,
-        _smallLevelChance + _mediumLevelChance + _largeLevelChance,
-        totalProbability // Chest level
+        _smallLevelChance + _mediumLevelChance + _largeLevelChance
         };
 
-        // Perform binary search to find the desired base type
         int left = 0;
         int right = cumulativeProbabilities.Length - 1;
 
@@ -323,7 +311,6 @@ public class GameController : MonoBehaviour
             }
         }
 
-        // Return the corresponding base type
         return (LevelInfoScriptableObject.BaseType)left;
     }
 
@@ -342,7 +329,6 @@ public class GameController : MonoBehaviour
         _smallLevelChance = smallLevelBaseChance;
         _mediumLevelChance = mediumLevelBaseChance;
         _largeLevelChance = largeLevelBaseChance;
-        _chestLevelChance = chestLevelBaseChance;
 
         playerManagerScript.SetPlayerHasKey(false);
         Destroy(playerManagerScript.GetPlayerInstance());
