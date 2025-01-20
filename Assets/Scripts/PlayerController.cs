@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,10 +15,11 @@ public class PlayerController : MonoBehaviour
     [Header("Player Stats")]
     [SerializeField] private PlayerScriptableObject _playerStats;
     public float moveSpeed;
-    public bool isInvincible;
+    public bool isInvincible = false;
 
     [Header("Dashing")]
     [SerializeField] private Cooldown cooldown;
+    public bool dashInvincable = false;
     public float dashingVelocity = 45f;
     public float dashDuration = 0.4f;
 
@@ -34,9 +37,11 @@ public class PlayerController : MonoBehaviour
         trailRenderer = GetComponent<TrailRenderer>();
         moveSpeed = _playerStats.movementSpeed;
         moveDir = Vector2.zero;
-        isInvincible = _playerStats.isInvincible;
         playerUI.SetMaxStamina(1f);
         playerUI.SetSpeedValue(moveSpeed);
+
+        // Initialize invincibility state
+        UpdateInvincibilityState();
     }
 
     private void Update()
@@ -51,6 +56,24 @@ public class PlayerController : MonoBehaviour
     {
         Move();
     }
+
+    public void SetInvincible(bool value)
+    {
+        isInvincible = value;
+        UpdateInvincibilityState(); // Ensure any related logic is updated
+    }
+    private void UpdateInvincibilityState()
+    {
+        // Determine if player should be invincible
+        bool shouldBeInvincible = isInvincible || dashInvincable;
+        // Update the ScriptableObject and physics layers
+        if (_playerStats.IsInvincible != shouldBeInvincible)
+        {
+            Debug.LogAssertion("Updated the global Player Invicibility to: " + shouldBeInvincible);
+            _playerStats.SetInvincible(shouldBeInvincible);
+        }
+    }
+
 
     public void SetMoveSpeed(float value)
     {
@@ -109,13 +132,14 @@ public class PlayerController : MonoBehaviour
     {
         // Player dash animation
         animator.SetTrigger("Dash");
-        trailRenderer.emitting = true;
 
         // Set stamina to 0 when dashing
         playerUI.SetStamina(0f);
 
         // Player is invincible during dash
-        _playerStats.SetInvincible(true);
+        dashInvincable = true;
+
+        UpdateInvincibilityState();
 
         // Ignore collisions between Player layer and Enemy layer
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
@@ -139,13 +163,13 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(dashDuration);
         Debug.Log("Dash ended");
-        trailRenderer.emitting = false;
         rb2D.velocity = Vector2.zero;
 
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), false);
 
         // Player is invincible during dash
-        _playerStats.SetInvincible(false);
+        dashInvincable = false;
+        UpdateInvincibilityState();
     }
     private IEnumerator DashCooldown()
     {

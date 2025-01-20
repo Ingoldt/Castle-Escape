@@ -173,9 +173,10 @@ MonoBehaviour:
   trailRenderer: {fileID: 0}
   _playerStats: {fileID: 11400000, guid: 5e258665abab6344d9f1d032d67d6e57, type: 2}
   moveSpeed: 4.5
-  isInvincible: 0
+  isInvincible: 1
   cooldown:
     cooldownTime: 5
+  dashInvincable: 0
   dashingVelocity: 45
   dashDuration: 0.4
 --- !u!114 &-4133388997016193438

@@ -51,28 +51,42 @@ public class PlayerManager : MonoBehaviour
     }
 
     // Update is called once per frame
-void Update()
-{
-    if (playerTransform != null)
-        playerPosition = playerTransform.position;
-}
-
-public GameObject SpawnPlayer(Vector3 spawnPosition)
-{
-    if (_playerInstance == null)
+    void Update()
     {
-        _playerInstance = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
-        DontDestroyOnLoad(_playerInstance);
+        if (playerTransform != null)
+            playerPosition = playerTransform.position;
     }
-    else
-    {
-        playerTransform.position = spawnPosition;
-    }
-    
-    playerPosition = spawnPosition;
-    playerTransform = _playerInstance.transform;
-    cameraScript.SetTarget(playerTransform);
 
-    return _playerInstance;
-}
+    public GameObject SpawnPlayer(Vector3 spawnPosition)
+    {
+        if (_playerInstance == null)
+        {
+            _playerInstance = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+            DontDestroyOnLoad(_playerInstance);
+
+            // Start invincibility after spawning
+            StartCoroutine(GrantInvincibilityAfterSpawn());
+        }
+        else
+        {
+            playerTransform.position = spawnPosition;
+        }
+
+        playerPosition = spawnPosition;
+        playerTransform = _playerInstance.transform;
+        cameraScript.SetTarget(playerTransform);
+
+        return _playerInstance;
+    }
+    private IEnumerator GrantInvincibilityAfterSpawn()
+    {
+        // Ensure the player script is accessible
+        PlayerController playerScript = _playerInstance.GetComponent<PlayerController>();
+        if (playerScript != null)
+        {
+            playerScript.SetInvincible(true); 
+            yield return new WaitForSeconds(4f); 
+            playerScript.SetInvincible(false); 
+        }
+    }
 }

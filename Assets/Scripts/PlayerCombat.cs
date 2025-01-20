@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
+using System;
 
 public class PlayerCombat : MonoBehaviour
 {
@@ -107,15 +108,20 @@ public class PlayerCombat : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        currentHealth -= damage;
-        playerUI.SetHealth(currentHealth);
-
-        //play hurt animation
-        animator.SetTrigger("Hurt");
-
-        if (currentHealth <= 0)
+        Debug.Log("Player invicibility state is: " + _playerStats.IsInvincible);
+        if (!_playerStats.IsInvincible)
         {
-            Die();
+            Debug.Log("Player is " + _playerStats.IsInvincible + " and can take damage");
+            currentHealth -= damage;
+            playerUI.SetHealth(currentHealth);
+
+            //play hurt animation
+            animator.SetTrigger("Hurt");
+
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
         }
     }
 

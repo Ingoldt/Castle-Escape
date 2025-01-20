@@ -180,8 +180,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.2312355, y: -0.10456848}
-  m_Size: {x: 0.44031525, y: 0.5148926}
+  m_Offset: {x: 0, y: -0.08}
+  m_Size: {x: 0.49, y: 0.65}
   m_Direction: 0
 --- !u!114 &5291429569297563220
 MonoBehaviour:
@@ -201,6 +201,8 @@ MonoBehaviour:
   - {fileID: 6812868286975200036, guid: 7cda98e7f7ffb324dadd6dcfaf724d40, type: 3}
   - {fileID: 1243694942710953246, guid: 846fb4264efe0654c96a3d40dd69d0c5, type: 3}
   - {fileID: 1899004714321782076, guid: 8b54559ae29394845991214faf3e8e81, type: 3}
+  firerballPrrefab: {fileID: 0}
+  myEnemyType: 0
   spawnCost: 0
   maxHealth: 0
   damage: 0

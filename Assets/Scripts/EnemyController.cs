@@ -304,7 +304,7 @@ public class EnemyController : MonoBehaviour
             // Detect player in attack range
             Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(attackPoint.position, enemyScript.attackRange, playerLayer);
 
-            // Damage Enemies and Barrels
+            // Damage Player
             foreach (Collider2D hit in hitPlayer)
             {
                 Debug.Log("Enemy hit: " + hit.name);
